@@ -1,0 +1,18 @@
+Uno de los registros modifica sus identificadores (RM).
+
+Uno (al menos uno) de los identificadores que tiene este registro modificado (RM) está
+siendo asociado a otro registro (RO)
+
+    Caso I: RM y RO tienen el mismo pk
+    Caso II: RM y RO tienen pk diferentes
+
+Pregunta: -> Ese otro registro puede tener identificadores que estén siendo utilizados y que
+no están presentes en el registro modificado???
+
+RM: id: 1  -  nickname: henry  -  dni: 24
+
+Uno de los identificadores de RM está siendo utilizado por otro registro
+
+
+
+

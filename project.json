@@ -1,0 +1,8 @@
+{
+  "scope": "beyond-js",
+  "name": "plm",
+  "version": "0.0.1",
+  "modules": {
+    "path": "./"
+  }
+}

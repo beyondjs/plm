@@ -1,0 +1,7 @@
+{
+  "name": "queries",
+  "ts": {
+    "path": ".",
+    "files": "*"
+  }
+}

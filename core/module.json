@@ -1,0 +1,8 @@
+{
+  "name": "core",
+  "ts": {
+    "path": ".",
+    "excludes": ["node_modules"],
+    "files": "*"
+  }
+}
