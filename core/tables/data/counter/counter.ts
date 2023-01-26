@@ -4,8 +4,6 @@ import {FilterSpecs, Filter} from "../filter/filter";
 import {CounterFetch} from "./fetch";
 import {CounterLocalStore} from "./local-store";
 
-export type CounterAttributes = Record<string, any>
-
 export interface Value {
     value: number
 }
@@ -14,11 +12,6 @@ export class CounterData extends Product {
     readonly #filter: Filter
     get filter() {
         return this.#filter;
-    }
-
-    readonly #attributes: CounterAttributes
-    get attributes() {
-        return this.#attributes;
     }
 
     #value: Value = {value: undefined};
@@ -70,10 +63,8 @@ export class CounterData extends Product {
         await this.#fetch.fetch();
     }
 
-    constructor(manager: CountersManager, key: string, instanceId: number,
-                filterSpecs: FilterSpecs, attributes: CounterAttributes, session: string) {
+    constructor(manager: CountersManager, key: string, instanceId: number, filterSpecs: FilterSpecs, session: string) {
         super(manager, key, instanceId, session);
         this.#filter = new Filter(this.table, filterSpecs);
-        this.#attributes = attributes;
     }
 }

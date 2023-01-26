@@ -26,8 +26,8 @@ export class CounterFetch {
         this.#fetching = true;
         this.#counter.trigger('change');
 
-        const attributes = {};
-        this.#value.value = await table.queries.counter(this.#counter.filter.specs, attributes);
+        const read = await table.crud.read.count(this.#counter);
+        this.#value.value = read.count;
 
         this.#fetching = false;
         this.#fetched = true;

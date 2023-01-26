@@ -3,7 +3,7 @@ import {PendingPromise} from '@beyond-js/kernel/core';
 
 let incremental = 0;
 
-type PK = string | number;
+export type PK = string | number;
 
 export /*bundle*/
 type TRecordResponse = {
@@ -21,7 +21,13 @@ type TListResponse = {
     data?: Record<string, any>;
 }[]
 
-export type TQueryResponse = TRecordResponse | TListResponse;
+export /*bundle*/
+type TCounterResponse = {
+    request: number;
+    count: number;
+}
+
+export type TQueryResponse = TRecordResponse | TListResponse | TCounterResponse;
 
 export type TCachedList = Record<PK, number>;
 
@@ -108,4 +114,31 @@ export class ListQuery extends Query<TListResponse> {
     }
 }
 
-export /*bundle*/ type TQuery = ListQuery | RecordQuery;
+export class CounterQuery extends Query<TCounterResponse> {
+    get requiring() {
+        return 'count';
+    }
+
+    readonly #filter: FilterSpecs;
+    get filter() {
+        return this.#filter;
+    }
+
+    readonly #index: string;
+    get index() {
+        return this.#index;
+    }
+
+    constructor({id, filter, index}: { id?: number, filter: FilterSpecs, index: string }) {
+        super(id);
+        this.#filter = filter;
+        this.#index = index;
+    }
+
+    toJSON() {
+        const {id, filter, index} = this;
+        return {id, filter, index};
+    }
+}
+
+export /*bundle*/ type TQuery = RecordQuery | ListQuery | CounterQuery;

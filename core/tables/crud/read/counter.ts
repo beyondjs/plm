@@ -1,31 +1,21 @@
-import type {FilterSpecs} from "../data/filter/filter";
-import type {CounterAttributes} from "../data/counter/counter";
-import type {Table} from "../table";
-import {Batch} from "./batch/batch";
-
-// interface CounterRead {
-//     action: string,
-//     filter?: FilterSpecs,
-//     attributes?: CounterAttributes
-//     index?: string,
-// }
+import type {Table} from '../../table';
+import type {ReadBatch} from './batch';
+import type {TCounterResponse} from './query';
+import type {CounterData} from '../../data/counter/counter';
+import {CounterQuery} from './query';
 
 export class CounterReader {
     #table: Table
-    #batch: Batch<CounterQueryRequest, number>
+    #batch: ReadBatch;
 
-    constructor(table: Table) {
+    constructor(table: Table, batch: ReadBatch) {
         this.#table = table;
-        this.#batch = new Batch({
-            module: table.module,
-            action: table.batch.actions.count,
-            max: table.batch.max
-        });
+        this.#batch = batch;
     }
 
-    async exec(filter: FilterSpecs, attributes: CounterAttributes): Promise<number> {
+    async read(counter: CounterData): Promise<number> {
         let fields: Record<string, any> = {};
-        filter = filter ? filter : [];
+        const filter = counter.filter.specs ? counter.filter.specs : [];
         let count = 0;
         filter.map(condition => {
             count++;
@@ -40,27 +30,19 @@ export class CounterReader {
             throw new Error(message);
         }
 
-        const request = {
-            action: 'counter',
-            attributes: attributes
-        }
-        count && Object.assign(request, {
-            index: index.name,
-            filter: filter,
-        });
+        const request = new CounterQuery({index: index?.name, filter});
+        const response = <TCounterResponse>await this.#batch.exec(request);
 
-        const response = await this.#batch.exec(request);
-
-        if (typeof response !== 'number') {
+        if (typeof response !== 'object') {
             console.error(`Invalid response received on query "counter" to table "${this.#table.name}"`,
                 request, response);
             return;
         }
 
-        this.#table.localDB.counters.save(filter, attributes, response)
+        this.#table.localDB.counters.save(filter, response.count)
             .catch(error => console.error(`Error saving counter of table "${this.#table.name}" to local storage`,
                 error, request, response));
 
-        return response;
+        return response.count;
     }
 }

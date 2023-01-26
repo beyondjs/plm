@@ -2,7 +2,6 @@ import {LocalDB} from "../local-database";
 import {MemoryLocalDBLists} from "./memory";
 import {FilterSpecs} from "../../data/filter/filter";
 import {PendingPromise} from "@beyond-js/kernel/core";
-import {ListAttributes} from "../../data/lists/list";
 import {CompareObjects} from "../../data/factory/compare-objects";
 
 export type IdsList = (string | number)[];
@@ -24,13 +23,13 @@ export class LocalDBLists {
         this.#db = db
     }
 
-    #generateKey = (filter: FilterSpecs, attributes: ListAttributes): string => {
+    #generateKey = (filter: FilterSpecs): string => {
         filter = filter ? filter : [];
 
         // Order the filter by field to assure that the generated key be unique
         filter = filter.sort((c1, c2) => c1.field > c2.field ? -1 : 1);
 
-        return CompareObjects.generate(filter, attributes);
+        return CompareObjects.generate(filter);
     };
 
     #save = (value: ListStoreStructure): Promise<boolean> => {
@@ -55,8 +54,8 @@ export class LocalDBLists {
         return promise;
     }
 
-    async save(filter: FilterSpecs, attributes: ListAttributes, data: IdsList): Promise<boolean> {
-        const key = this.#generateKey(filter, attributes);
+    async save(filter: FilterSpecs, data: IdsList): Promise<boolean> {
+        const key = this.#generateKey(filter);
 
         const value: ListStoreStructure = {
             key: key,
@@ -97,8 +96,8 @@ export class LocalDBLists {
         return promise;
     }
 
-    async load(filter: FilterSpecs, attributes: ListAttributes): Promise<ListStoreStructure> {
-        const key = this.#generateKey(filter, attributes);
+    async load(filter: FilterSpecs): Promise<ListStoreStructure> {
+        const key = this.#generateKey(filter);
         if (this.#memory.has(key)) return this.#memory.get(key);
 
         if (!this.#db.table.cache.enabled) return;

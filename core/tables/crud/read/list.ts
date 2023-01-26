@@ -1,13 +1,15 @@
-import type {Batch} from "./batch/batch";
-import type {FilterSpecs} from "../data/filter/filter";
-import type {ListAttributes} from "../data/lists/list";
-import type {Table} from "../table";
+import type {Table} from '../../table';
+import type {ReadBatch} from './batch';
+import type {ListData} from '../../data/lists/list';
+import type {PK, TCachedList, TListResponse} from './query';
+import type {FilterSpecs} from '../../data/filter/filter';
+import {ListQuery} from './query';
 
 export class ListReader {
-    #table;
-    #batch: Batch;
+    #table: Table;
+    #batch: ReadBatch;
 
-    constructor(table: Table, batch: Batch) {
+    constructor(table: Table, batch: ReadBatch) {
         this.#table = table;
         this.#batch = batch;
     }
@@ -17,16 +19,15 @@ export class ListReader {
      * and the value is its version
      *
      * @param {FilterSpecs} filter
-     * @param {ListAttributes} attributes
      * @returns {Record<string, number>}
      */
-    async #cached(filter: FilterSpecs, attributes: ListAttributes): Promise<CachedList> {
-        let output: CachedList = {};
+    async #cached(filter: FilterSpecs): Promise<TCachedList> {
+        let output: TCachedList = {};
 
-        let cached = await this.#table.localDB.lists.load(filter, attributes);
+        let cached = await this.#table.localDB.lists.load(filter);
         if (cached && !(cached.data instanceof Array)) {
             console.warn('Cache of list is invalid.\n', cached);
-            cached = undefined;
+            cached = void 0;
         }
 
         if (!cached) return;
@@ -38,7 +39,7 @@ export class ListReader {
             const fields: Record<string, string | number> = {};
             fields[pk] = record;
 
-            let cached = await this.#table.localDB.records.load(index.name, fields, attributes.accessToken);
+            let cached = await this.#table.localDB.records.load(index.name, fields);
             cached && (output[record] = cached.version);
         }
 
@@ -49,11 +50,10 @@ export class ListReader {
      * Creates a ListQueryRequest
      *
      * @param {FilterSpecs} filter
-     * @param {ListAttributes} attributes
-     * @returns {ListQueryRequest}
+     * @returns {ListQuery}
      */
-    async #request(filter: FilterSpecs, attributes: ListAttributes): Promise<ListQueryRequest> {
-        const cached: CachedList = await this.#cached(filter, attributes);
+    async #request(filter: FilterSpecs): Promise<ListQuery> {
+        const cached: TCachedList = await this.#cached(filter);
 
         const fields: Record<string, any> = {};
         filter = filter ? filter : [];
@@ -63,7 +63,7 @@ export class ListReader {
             fields[condition.field] = condition.value;
         });
 
-        const index = count ? this.#table.indices.select('list', fields) : undefined;
+        const index = count ? this.#table.indices.select('list', fields) : void 0;
         if (count && !index) {
             const message = `No index found in table "${this.#table.name}" ` +
                 `that can be used to solve the "list" request.\n\n`;
@@ -71,22 +71,12 @@ export class ListReader {
             throw new Error(message);
         }
 
-        const request = {attributes, cached};
-        count && Object.assign(request, {filter, index: index.name});
-
-        return request;
+        return new ListQuery({cached, filter, index: index?.name});
     }
 
-    /**
-     * Executes a list query
-     *
-     * @param {FilterSpecs} filter
-     * @param {ListAttributes} attributes
-     * @returns {Promise<(string | number)[]>}
-     */
-    async exec(filter: FilterSpecs, attributes: ListAttributes): Promise<(string | number)[]> {
-        const request = await this.#request(filter, attributes);
-        const response: ListQueryResponse = await this.#table.list(request);
+    async read(list: ListData): Promise<PK[]> {
+        const request = await this.#request(list.filter.specs);
+        const response = <TListResponse>await this.#batch.exec(request);
 
         if (!(response instanceof Array)) {
             console.error(`Invalid response received on query "list" to table "${this.#table.name}".\n\n`,
@@ -119,12 +109,12 @@ export class ListReader {
                 listIds.push(record.pk);
             }
 
-            this.#table.localDB.records.save(record.data, record.version, attributes.accessToken)
+            this.#table.localDB.records.save(record.data, record.version)
                 .catch(error => console.error(`Error saving record of table "${this.#table.name}" to local storage.\n\n`,
                     error, '\n', request, '\n', record));
         }
 
-        this.#table.localDB.lists.save(filter, attributes, listIds)
+        this.#table.localDB.lists.save(list.filter.specs, listIds)
             .catch(error => console.error(`Error saving list of table "${this.#table.name}" to local storage.\n\n`,
                 error, '\n', request, '\n', listIds));
 

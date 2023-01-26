@@ -33,12 +33,12 @@ export class Crud {
     }
 
     async publish(record: RecordData): Promise<{ error?: string }> {
-        const response = <RecordStoreStructure>await this.#functions.create(fields, attributes);
+        const response = <RecordStoreStructure>await this.#functions.create(fields);
         return {};
     }
 
     async delete(record: RecordData): Promise<{ error?: string }> {
-        const response = <RecordStoreStructure>await this.#functions.delete(pk, attributes);
+        const response = <RecordStoreStructure>await this.#functions.delete(pk);
         return {};
     }
 }

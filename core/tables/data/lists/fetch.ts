@@ -26,9 +26,7 @@ export class ListFetch {
         this.#fetching = true;
         this.#list.trigger('change');
 
-        const attributes = {};
-
-        const response: (string | number)[] = await table.queries.list(this.#list.filter.specs, attributes);
+        const response: (string | number)[] = await table.crud.read.list(this.#list);
         if (!response) {
             this.#fetching = false;
             this.#fetched = true;

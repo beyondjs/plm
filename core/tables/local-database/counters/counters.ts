@@ -3,7 +3,6 @@ import {MemoryLocalDBCounters} from "./memory";
 import {FilterSpecs} from "../../data/filter/filter";
 import {PendingPromise} from "@beyond-js/kernel/core";
 import {CompareObjects} from "../../data/factory/compare-objects";
-import type {CounterAttributes} from "../../data/counter/counter";
 
 export type CounterStoreStructure = {
     key: string,
@@ -22,13 +21,13 @@ export class LocalDBCounters {
         this.#db = db
     }
 
-    #generateKey = (filter: FilterSpecs, attributes: CounterAttributes): string => {
+    #generateKey = (filter: FilterSpecs): string => {
         filter = filter ? filter : [];
 
         // Order the filter by field to assure that the generated key be unique
         filter = filter.sort((c1, c2) => c1.field > c2.field ? -1 : 1);
 
-        return CompareObjects.generate(filter, attributes);
+        return CompareObjects.generate(filter);
     };
 
     #save = (key: string, value: number): Promise<boolean> => {
@@ -53,10 +52,10 @@ export class LocalDBCounters {
         return promise;
     }
 
-    async save(filter: FilterSpecs, attributes: CounterAttributes, data: number): Promise<boolean> {
+    async save(filter: FilterSpecs, data: number): Promise<boolean> {
         // Save in memory cache first, the data must be available immediately as other
         // nodes in the tree that request the data could require it
-        const key = this.#generateKey(filter, attributes);
+        const key = this.#generateKey(filter);
         this.#memory.set(key, data);
 
         await this.#db.prepare();
@@ -87,9 +86,9 @@ export class LocalDBCounters {
         return promise;
     }
 
-    async load(filter: FilterSpecs, attributes: CounterAttributes): Promise<number> {
+    async load(filter: FilterSpecs): Promise<number> {
         await this.#db.prepare();
-        const key = this.#generateKey(filter, attributes);
+        const key = this.#generateKey(filter);
         return await this.#load(key);
     }
 }
