@@ -1,11 +1,11 @@
 import type {TReadFunction} from "./index";
-import type {Query, TQueryResponse} from "./query";
+import type {TQuery, TQueryResponse} from "./query";
 
 export class ReadBatch {
     readonly #read: TReadFunction;
     readonly #specs: { max: number };
-    readonly #queue: Query<TQueryResponse>[] = [];
-    readonly #queries: Map<string, Query<TQueryResponse>> = new Map();
+    readonly #queue: TQuery[] = [];
+    readonly #queries: Map<number, TQuery> = new Map();
 
     get queueLength(): number {
         return this.#queue.length;
@@ -25,7 +25,7 @@ export class ReadBatch {
      * @param query{Query} The query to be batched
      * @returns {Promise<*>} The response of the query request
      */
-    exec(query: Query<TQueryResponse>): Promise<TQueryResponse> {
+    exec(query: TQuery): Promise<TQueryResponse> {
         this.#queue.push(query);
         this.#queries.set(query.id, query);
         clearTimeout(this.#timer);
@@ -41,22 +41,25 @@ export class ReadBatch {
         if (!this.#queue.length) return; // No more queries in queue to be processed
 
         const queries = this.#queue.splice(0, this.#specs.max);
-        const response = this.#read(queries);
-        if (!(response instanceof Promise)) throw new Error(`Response of action "${response}" is not a promise`);
 
-        response.then((response: [string, TQueryResponse][]) => {
-            const responses: Map<string, TQueryResponse> = new Map(response);
-
-            for (const rq of queries) {
-                this.#queries.delete(rq.id);
-                rq.promise.resolve(responses.get(rq.id));
+        const done = ({error, outputs}: { error?: string, outputs?: Map<number, TQueryResponse> }) => {
+            for (const query of queries) {
+                this.#queries.delete(query.id);
+                const response = outputs.get(query.id);
+                error ? query.reject(new Error(error)) : query.resolve(<any>response);
             }
+        }
+
+        const result = this.#read(queries);
+        if (!(result instanceof Promise)) return done({error: `Queries response is not a promise`});
+
+        result.then((outputs: TQueryResponse[]) => {
+            if (!(outputs instanceof Array)) return done({error: `Queries outputs is not an array`});
+            done({outputs: new Map(outputs.map(qr => [qr.request, qr]))});
         }).catch((error: Error) => {
-            for (const rq of queries) {
-                this.#queries.delete(rq.id);
-                rq.promise.reject(error);
-            }
+            done({error: `Error caught calling read method: ${error.message}`});
         }).finally(() => {
+            // Continue read batch execution
             this.#execute();
         })
     }

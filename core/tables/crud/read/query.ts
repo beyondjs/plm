@@ -9,17 +9,19 @@ export /*bundle*/
 type TRecordResponse = {
     request: number;
     fields: Record<string, any>;
+    found: boolean;
     version: number;
 }
 
 export /*bundle*/
 type TListResponse = {
     request: number;
-    uptodate: boolean;
-    pk?: PK;
-    version?: number;
-    data?: Record<string, any>;
-}[]
+    records: {
+        pk?: PK;
+        version?: number;
+        data?: Record<string, any>;
+    }[]
+}
 
 export /*bundle*/
 type TCounterResponse = {
@@ -34,7 +36,7 @@ export type TCachedList = Record<PK, number>;
 export class Query<TQueryResponse> {
     readonly #id;
     get id() {
-        return `${this.#id}`;
+        return this.#id;
     }
 
     readonly #promise: PendingPromise<TQueryResponse>;
@@ -43,7 +45,16 @@ export class Query<TQueryResponse> {
     }
 
     resolve(response: TQueryResponse) {
+        if (!response) {
+            this.#promise.reject(new Error(`Query response not received`));
+            return;
+        }
+
         this.#promise.resolve(response);
+    }
+
+    reject(error: Error) {
+        this.#promise.reject(error);
     }
 
     constructor(id?: number) {
@@ -73,6 +84,15 @@ export class RecordQuery extends Query<TRecordResponse> {
         super(id);
         this.#fields = fields;
         this.#version = version;
+    }
+
+    resolve(response: TRecordResponse) {
+        if (typeof response.fields !== 'object') {
+            super.reject(new Error(`Invalid response received from query, fields is not an object`));
+            return;
+        }
+
+        super.resolve(response);
     }
 
     toJSON() {
@@ -108,6 +128,15 @@ export class ListQuery extends Query<TListResponse> {
         this.#cached = cached;
     }
 
+    resolve(response: TListResponse) {
+        if (!(response.records instanceof Array)) {
+            super.reject(new Error(`Invalid response received from query, records is not an array`));
+            return;
+        }
+
+        super.resolve(response);
+    }
+
     toJSON() {
         const {id, filter, index, cached} = this;
         return {id, filter, index, cached};
@@ -133,6 +162,15 @@ export class CounterQuery extends Query<TCounterResponse> {
         super(id);
         this.#filter = filter;
         this.#index = index;
+    }
+
+    resolve(response: TCounterResponse) {
+        if (typeof response.count !== 'number') {
+            super.reject(new Error(`Invalid response received from query, count is not a number`));
+            return;
+        }
+
+        super.resolve(response);
     }
 
     toJSON() {

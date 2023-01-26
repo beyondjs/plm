@@ -1,14 +1,13 @@
 import type {Table} from '../table';
-import type {RecordStoreStructure} from '../local-database/records/records';
 import type {TReadFunction} from "./read";
 import type {RecordData} from "../data/records/data/record";
 import {TableRead} from "./read";
 
 export type CrudFunctions = {
-    create: () => Promise<void>;
+    create: (record: RecordData) => Promise<{ error: string }>;
     read: TReadFunction;
-    update: () => Promise<void>;
-    delete: () => Promise<void>;
+    update: (record: RecordData) => Promise<{ error: string }>;
+    delete: (record: RecordData) => Promise<{ error: string }>;
 }
 
 /**
@@ -33,12 +32,18 @@ export class Crud {
     }
 
     async publish(record: RecordData): Promise<{ error?: string }> {
-        const response = <RecordStoreStructure>await this.#functions.create(fields);
-        return {};
+        try {
+            return await this.#functions.create(record);
+        } catch (error) {
+            return {error: error.message};
+        }
     }
 
     async delete(record: RecordData): Promise<{ error?: string }> {
-        const response = <RecordStoreStructure>await this.#functions.delete(pk);
-        return {};
+        try {
+            return await this.#functions.delete(record);
+        } catch (error) {
+            return {error: error.message};
+        }
     }
 }
