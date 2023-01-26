@@ -1,7 +1,7 @@
 import {SingleCall} from "@beyond-js/kernel/core";
 import type {ListData} from "./list";
 
-export class ListFetch {
+export class ListFetcher {
     readonly #list: ListData
 
     constructor(list: ListData) {
@@ -26,19 +26,21 @@ export class ListFetch {
         this.#fetching = true;
         this.#list.trigger('change');
 
-        const response: (string | number)[] = await table.crud.read.list(this.#list);
-        if (!response) {
+        const done = ({data, error}: { data?: (string | number)[], error?: string }) => {
             this.#fetching = false;
             this.#fetched = true;
+
+            this.#list.records.overwrite(data ? data : []);
+            this.#list.error = error;
             this.#list.trigger('change');
-            return;
+            this.#list.trigger('updated');
         }
 
-        this.#list.records.overwrite(response);
-
-        this.#fetching = false;
-        this.#fetched = true;
-        this.#list.trigger('change');
-        this.#list.trigger('updated');
+        try {
+            const response: (string | number)[] = await table.crud.read.list(this.#list);
+            return done({data: response});
+        } catch (error) {
+            return done({error: error.message});
+        }
     }
 }

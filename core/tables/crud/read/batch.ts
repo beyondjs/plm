@@ -13,8 +13,12 @@ export class ReadBatch {
 
     constructor(read: TReadFunction, specs?: { max?: number }) {
         this.#read = read;
-        const max = specs.max ? specs.max : 30;
-        this.#specs = {max};
+
+        this.#specs = ((specs) => {
+            specs = specs ? specs : {};
+            const max = specs.max ? specs.max : 30;
+            return {max};
+        })(specs)
     }
 
     #timer: number;
@@ -45,8 +49,7 @@ export class ReadBatch {
         const done = ({error, outputs}: { error?: string, outputs?: Map<number, TQueryResponse> }) => {
             for (const query of queries) {
                 this.#queries.delete(query.id);
-                const response = outputs.get(query.id);
-                error ? query.reject(new Error(error)) : query.resolve(<any>response);
+                error ? query.reject(new Error(error)) : query.resolve(<any>outputs.get(query.id));
             }
         }
 
@@ -57,6 +60,7 @@ export class ReadBatch {
             if (!(outputs instanceof Array)) return done({error: `Queries outputs is not an array`});
             done({outputs: new Map(outputs.map(qr => [qr.request, qr]))});
         }).catch((error: Error) => {
+            console.error(error.stack);
             done({error: `Error caught calling read method: ${error.message}`});
         }).finally(() => {
             // Continue read batch execution

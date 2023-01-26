@@ -29,7 +29,7 @@ type TCounterResponse = {
     count: number;
 }
 
-export type TQueryResponse = TRecordResponse | TListResponse | TCounterResponse;
+export /*bundle*/ type TQueryResponse = TRecordResponse | TListResponse | TCounterResponse;
 
 export type TCachedList = Record<PK, number>;
 
@@ -87,7 +87,7 @@ export class RecordQuery extends Query<TRecordResponse> {
     }
 
     resolve(response: TRecordResponse) {
-        if (typeof response.fields !== 'object') {
+        if (response && typeof response.fields !== 'object') {
             super.reject(new Error(`Invalid response received from query, fields is not an object`));
             return;
         }
@@ -129,7 +129,7 @@ export class ListQuery extends Query<TListResponse> {
     }
 
     resolve(response: TListResponse) {
-        if (!(response.records instanceof Array)) {
+        if (response && !(response.records instanceof Array)) {
             super.reject(new Error(`Invalid response received from query, records is not an array`));
             return;
         }
@@ -165,7 +165,7 @@ export class CounterQuery extends Query<TCounterResponse> {
     }
 
     resolve(response: TCounterResponse) {
-        if (typeof response.count !== 'number') {
+        if (response && typeof response.count !== 'number') {
             super.reject(new Error(`Invalid response received from query, count is not a number`));
             return;
         }

@@ -4,10 +4,10 @@ import type {RecordData} from "../data/records/data/record";
 import {TableRead} from "./read";
 
 export type CrudFunctions = {
-    create: (record: RecordData) => Promise<{ error: string }>;
+    create?: (record: RecordData) => Promise<{ error: string }>;
     read: TReadFunction;
-    update: (record: RecordData) => Promise<{ error: string }>;
-    delete: (record: RecordData) => Promise<{ error: string }>;
+    update?: (record: RecordData) => Promise<{ error: string }>;
+    delete?: (record: RecordData) => Promise<{ error: string }>;
 }
 
 /**

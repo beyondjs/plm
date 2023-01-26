@@ -2,7 +2,7 @@ import {SingleCall} from "@beyond-js/kernel/core";
 import {Product} from "../factory/product";
 import type {ListsManager} from "./manager/manager";
 import {FilterSpecs, Filter} from "../filter/filter";
-import {ListFetch} from "./fetch";
+import {ListFetcher} from "./fetcher";
 import {ListLocalStore} from "./local-store";
 import {ListRecords} from "./records";
 import {Order, OrderSpecs} from "./order";
@@ -10,12 +10,25 @@ import {Order, OrderSpecs} from "./order";
 export class ListData extends Product {
     readonly #filter: Filter
     get filter() {
-        return this.#filter
+        return this.#filter;
     }
 
     readonly #order: Order
     get order() {
-        return this.#order
+        return this.#order;
+    }
+
+    #error: string;
+    get error() {
+        return this.#error;
+    }
+
+    set error(value: string) {
+        this.#error = value;
+    }
+
+    get valid() {
+        return !this.#error;
     }
 
     #invalidated = false;
@@ -28,11 +41,11 @@ export class ListData extends Product {
 
     readonly #records = new ListRecords(this);
     get records() {
-        return this.#records
+        return this.#records;
     }
 
     // The local store, properties and methods
-    #localStore = new ListLocalStore(this)
+    #localStore = new ListLocalStore(this);
     get localStore() {
         return this.#localStore;
     }
@@ -63,18 +76,18 @@ export class ListData extends Product {
     }
 
     // The fetch manager, properties and methods
-    readonly #fetch = new ListFetch(this);
+    readonly #fetcher = new ListFetcher(this);
 
     get fetching() {
-        return this.#fetch.fetching
+        return this.#fetcher.fetching;
     }
 
     get fetched() {
-        return this.#fetch.fetched
+        return this.#fetcher.fetched;
     }
 
     async fetch() {
-        await this.#fetch.fetch()
+        await this.#fetcher.fetch();
     }
 
     /**

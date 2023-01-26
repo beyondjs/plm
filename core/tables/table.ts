@@ -14,7 +14,7 @@ interface CacheSpecs {
 
 export /*bundle*/
 interface TableSpecs {
-    cache: CacheSpecs | undefined | boolean;
+    cache?: CacheSpecs | undefined | boolean;
     crud: CrudFunctions;
     version?: number;
     indices: IndicesSpecs;

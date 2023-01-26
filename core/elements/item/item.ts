@@ -35,6 +35,14 @@ class Item extends Element<ItemNode> {
         return this.#record
     }
 
+    get error(): string {
+        return this.#record.error;
+    }
+
+    get valid(): boolean {
+        return this.#record.valid;
+    }
+
     get version(): number {
         return this.#record.version;
     }

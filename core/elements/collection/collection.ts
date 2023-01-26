@@ -21,27 +21,35 @@ export interface DerivedCollection {
 export /*bundle*/
 class Collection extends Element<CollectionNode> {
     get is() {
-        return 'collection'
+        return 'collection';
     }
 
-    readonly #Item: DerivedItem
+    readonly #Item: DerivedItem;
     get Item(): DerivedItem {
-        return this.#Item
+        return this.#Item;
     }
 
-    readonly #list: ListData
+    readonly #list: ListData;
     get list() {
-        return this.#list
+        return this.#list;
     }
 
-    readonly #counters: CollectionCounters = new CollectionCounters(this)
+    get error(): string {
+        return this.#list.error;
+    }
+
+    get valid(): boolean {
+        return this.#list.valid;
+    }
+
+    readonly #counters: CollectionCounters = new CollectionCounters(this);
     get counters() {
-        return this.#counters
+        return this.#counters;
     }
 
-    readonly #items = new CollectionItems(this)
+    readonly #items = new CollectionItems(this);
     get items(): Item[] {
-        return this.#items.items
+        return this.#items.items;
     }
 
     readonly #tree = new Tree(this);
