@@ -47,22 +47,7 @@ export class RecordFetcher {
         this.#fetching = true;
         this.#record.trigger('change');
 
-        const fields: Record<string, any> = {};
-
-        let count = 0;
-        for (const [name, field] of this.#record.fields) {
-            if (!field.assigned) continue;
-            fields[name] = field.value;
-            count++;
-        }
-        const attributes = {};
-
-        if (count === 0) {
-            console.warn('None of the fields of the record being fetched is set', this.#record);
-            return;
-        }
-
-        const response: RecordStoreStructure = await table.queries.data(fields, attributes);
+        const response: RecordStoreStructure = await table.crud.read.record(this.#record);
         if (!response) {
             this.#fetching = false;
             this.#fetched = true;

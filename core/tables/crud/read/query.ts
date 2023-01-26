@@ -1,5 +1,5 @@
+import type {FilterSpecs} from "../../data/filter/filter";
 import {PendingPromise} from '@beyond-js/kernel/core';
-import type {FilterSpecs} from "../data/filter/filter";
 
 let incremental = 0;
 
@@ -9,6 +9,7 @@ export /*bundle*/
 type TRecordResponse = {
     request: number;
     fields: Record<string, any>;
+    version: number;
 }
 
 export /*bundle*/
@@ -20,9 +21,11 @@ type TListResponse = {
     data?: Record<string, any>;
 }[]
 
-export /*bundle*/ type TQueryResponse = TListResponse | TRecordResponse;
+export type TQueryResponse = TRecordResponse | TListResponse;
 
-export class Query {
+export type TCachedList = Record<PK, number>;
+
+export class Query<TQueryResponse> {
     readonly #id;
     get id() {
         return `${this.#id}`;
@@ -33,6 +36,10 @@ export class Query {
         return this.#promise;
     }
 
+    resolve(response: TQueryResponse) {
+        this.#promise.resolve(response);
+    }
+
     constructor(id?: number) {
         this.#id = id ? id : incremental++;
         this.#promise = id ? void 0 : new PendingPromise();
@@ -40,16 +47,10 @@ export class Query {
 }
 
 type TFields = Record<string, any>;
-type TAttributes = Record<string, any>;
 
-export class RecordQuery extends Query {
+export class RecordQuery extends Query<TRecordResponse> {
     get requiring() {
         return 'record';
-    }
-
-    readonly #version: number;
-    get version() {
-        return this.#version;
     }
 
     readonly #fields: Record<string, any>;
@@ -57,22 +58,24 @@ export class RecordQuery extends Query {
         return this.#fields;
     }
 
-    readonly #attributes: Record<string, any>;
-    get attributes() {
-        return this.#attributes;
+    readonly #version: number;
+    get version() {
+        return this.#version;
     }
 
-    constructor({id, version, fields, attributes}:
-                    { id?: number, version: number, fields: TFields, attributes: TAttributes }) {
+    constructor({id, fields, version}: { id?: number, fields: TFields, version: number }) {
         super(id);
-
-        this.#version = version;
         this.#fields = fields;
-        this.#attributes = attributes;
+        this.#version = version;
+    }
+
+    toJSON() {
+        const {id, fields, version} = this;
+        return {id, fields, version};
     }
 }
 
-export class ListQuery extends Query {
+export class ListQuery extends Query<TListResponse> {
     get requiring() {
         return 'list';
     }
@@ -87,26 +90,21 @@ export class ListQuery extends Query {
         return this.#index;
     }
 
-    readonly #attributes: TAttributes;
-    get attributes() {
-        return this.#attributes;
-    }
-
-    readonly #cached: Record<PK, number>;
+    readonly #cached: TCachedList;
     get cached() {
         return this.#cached;
     }
 
-    constructor({id, filter, index, attributes, cached}: {
-        id?: number, filter: FilterSpecs, index: string,
-        attributes: TAttributes, cached: Record<PK, number>
-    }) {
+    constructor({id, filter, index, cached}: { id?: number, filter: FilterSpecs, index: string, cached: TCachedList }) {
         super(id);
-
         this.#filter = filter;
         this.#index = index;
-        this.#attributes = attributes;
         this.#cached = cached;
+    }
+
+    toJSON() {
+        const {id, filter, index, cached} = this;
+        return {id, filter, index, cached};
     }
 }
 

@@ -4,32 +4,32 @@ import type {Field} from "../../data/records/data/fields/field";
 import {CompareObjects} from "../../data/factory/compare-objects";
 
 export class MemoryLocalDBRecords extends Map<string, RecordStoreStructure> {
-    generateKey = (pk: string | number, accessToken?: string): string => {
-        return CompareObjects.generate(pk, accessToken);
-    };
+    generateKey = (pk: string | number): string => {
+        return CompareObjects.generate(pk);
+    }
 
-    exists(pk: string | number, accessToken: string): boolean {
-        const key = this.generateKey(pk, accessToken);
+    exists(pk: string | number): boolean {
+        const key = this.generateKey(pk);
         return super.has(key);
     }
 
-    load(record: RecordData, accessToken?: string): RecordStoreStructure {
+    load(record: RecordData): RecordStoreStructure {
         const pk: Field = record.pk;
         if (!pk.assigned) return;
 
-        const key = this.generateKey(pk.value, accessToken);
+        const key = this.generateKey(pk.value);
         if (!this.has(key)) return;
 
         return this.get(key);
     }
 
-    save(pk: string | number, accessToken: string, value: RecordStoreStructure) {
-        const key = this.generateKey(pk, accessToken);
+    save(pk: string | number, value: RecordStoreStructure) {
+        const key = this.generateKey(pk);
         super.set(key, value);
     }
 
-    remove(pk: string | number, accessToken: string) {
-        const key = this.generateKey(pk, accessToken);
+    remove(pk: string | number) {
+        const key = this.generateKey(pk);
         super.delete(key);
     }
 }

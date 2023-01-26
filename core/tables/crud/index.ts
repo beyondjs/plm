@@ -1,6 +1,7 @@
 import type {Table} from '../table';
 import type {RecordStoreStructure} from '../local-database/records/records';
 import type {TReadFunction} from "./read";
+import type {RecordData} from "../data/records/data/record";
 import {TableRead} from "./read";
 
 export type CrudFunctions = {
@@ -28,25 +29,16 @@ export class Crud {
 
     constructor(table: Table, functions: CrudFunctions) {
         this.#functions = functions;
-        this.#read = new TableRead(this);
+        this.#read = new TableRead(table, functions.read);
     }
 
-    async publish(fields: Map<string, any>, session: string): Promise<{ error?: string }> {
-        const request = {
-            action: 'publish',
-            fields: fields,
-            // attributes: attributes
-        };
-        const response = <RecordStoreStructure>await this.#table.module.execute('publish', request);
+    async publish(record: RecordData): Promise<{ error?: string }> {
+        const response = <RecordStoreStructure>await this.#functions.create(fields, attributes);
         return {};
     }
 
-    async delete(pk: string | number): Promise<{ error?: string }> {
-        const request = {
-            action: 'delete', pk
-            // attributes: attributes
-        };
-        const response = <RecordStoreStructure>await this.#table.module.execute('delete', request);
+    async delete(record: RecordData): Promise<{ error?: string }> {
+        const response = <RecordStoreStructure>await this.#functions.delete(pk, attributes);
         return {};
     }
 }

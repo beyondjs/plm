@@ -53,7 +53,6 @@ class ItemProperty implements Property {
 
         // Check if the identifier has changed
         if (this.#lastIdentifier && CompareObjects.compare(this.#lastIdentifier, identifier)) {
-            //TODO: agregar comentario para caso de uso, en actualizacion de Item
             return this.#value;
         }
         this.#lastIdentifier = identifier;

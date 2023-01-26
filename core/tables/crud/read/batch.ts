@@ -1,18 +1,18 @@
-import type {CRUD} from "../../table";
-import type {Query, TResponse} from "./query";
+import type {TReadFunction} from "./index";
+import type {Query, TQueryResponse} from "./query";
 
 export class ReadBatch {
-    readonly #crud: CRUD;
+    readonly #read: TReadFunction;
     readonly #specs: { max: number };
-    readonly #queue: Query[] = [];
-    readonly #queries: Map<string, Query> = new Map();
+    readonly #queue: Query<TQueryResponse>[] = [];
+    readonly #queries: Map<string, Query<TQueryResponse>> = new Map();
 
     get queueLength(): number {
         return this.#queue.length;
     }
 
-    constructor(crud: CRUD, specs?: { max?: number }) {
-        this.#crud = crud;
+    constructor(read: TReadFunction, specs?: { max?: number }) {
+        this.#read = read;
         const max = specs.max ? specs.max : 30;
         this.#specs = {max};
     }
@@ -25,7 +25,7 @@ export class ReadBatch {
      * @param query{Query} The query to be batched
      * @returns {Promise<*>} The response of the query request
      */
-    exec(query: Query): Promise<TResponse> {
+    exec(query: Query<TQueryResponse>): Promise<TQueryResponse> {
         this.#queue.push(query);
         this.#queries.set(query.id, query);
         clearTimeout(this.#timer);
@@ -41,11 +41,11 @@ export class ReadBatch {
         if (!this.#queue.length) return; // No more queries in queue to be processed
 
         const queries = this.#queue.splice(0, this.#specs.max);
-        const response = this.#crud.read(queries);
+        const response = this.#read(queries);
         if (!(response instanceof Promise)) throw new Error(`Response of action "${response}" is not a promise`);
 
-        response.then((response: [string, TResponse][]) => {
-            const responses: Map<string, TResponse> = new Map(response);
+        response.then((response: [string, TQueryResponse][]) => {
+            const responses: Map<string, TQueryResponse> = new Map(response);
 
             for (const rq of queries) {
                 this.#queries.delete(rq.id);

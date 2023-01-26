@@ -1,7 +1,7 @@
 import type {LocalDB} from "../local-database";
 import {PendingPromise} from "@beyond-js/kernel/core";
 import {MemoryLocalDBRecords} from "./memory";
-import type {Index} from "../../indices/index";
+import type {Index} from "../../indices";
 
 export type RecordFieldsValues = Record<string, any>
 export type IndexFieldsValues = Record<string, any>
@@ -9,7 +9,6 @@ export type IndexFieldsValues = Record<string, any>
 export type RecordStoreStructure = {
     data: RecordFieldsValues
     version: number
-    accessToken?: string
     savedTime: number
 }
 
@@ -46,7 +45,7 @@ export class LocalDBRecords {
         return promise;
     }
 
-    async save(data: RecordFieldsValues, version: number, accessToken?: string): Promise<boolean> {
+    async save(data: RecordFieldsValues, version: number): Promise<boolean> {
         const pk = this.#db.table.indices.primary.fields[0];
         if (!data.hasOwnProperty(pk)) {
             throw new Error(`Cannot save record to the local database as its pk "${pk}" is not assigned`);
@@ -55,13 +54,12 @@ export class LocalDBRecords {
         const value: RecordStoreStructure = {
             data: data,
             version: version,
-            accessToken: accessToken ? accessToken : '',
             savedTime: Date.now()
         };
 
         // Save in memory cache first, the data must be available immediately as other
         // nodes in the tree that request the data could require it
-        this.#memory.save(data[pk], accessToken, value);
+        this.#memory.save(data[pk], value);
 
         if (!this.#db.table.cache.enabled) return;
         await this.#db.prepare();
@@ -73,7 +71,7 @@ export class LocalDBRecords {
         return true;
     }
 
-    async remove(data: RecordFieldsValues, accessToken?: string): Promise<boolean> {
+    async remove(data: RecordFieldsValues): Promise<boolean> {
         const pk = this.#db.table.indices.primary.fields[0];
         if (!data.hasOwnProperty(pk)) {
             throw new Error(`Cannot remove record to the local database as its pk "${pk}"`);
@@ -81,14 +79,14 @@ export class LocalDBRecords {
 
         // Remove in memory cache first, the data must be available immediately as other
         // nodes in the tree that request the data could require it
-        this.#memory.remove(data[pk], accessToken);
+        this.#memory.remove(data[pk]);
 
         if (!this.#db.table.cache.enabled) return;
         await this.#db.prepare();
         return await this.#remove();
     }
 
-    #load = (index: Index, fields: IndexFieldsValues, accessToken?: string): Promise<RecordStoreStructure> => {
+    #load = (index: Index, fields: IndexFieldsValues): Promise<RecordStoreStructure> => {
         const pkField = this.#db.table.indices.primary.fields[0];
         const pk = fields.hasOwnProperty(pkField) ? fields[pkField] : undefined;
 
@@ -100,11 +98,9 @@ export class LocalDBRecords {
         const transaction = this.#db.db.transaction(['records'], 'readonly');
         const store = transaction.objectStore('records');
 
-        accessToken = accessToken ? accessToken : '';
-
         let rq;
         if (index.primary) {
-            rq = store.get([pk, accessToken]);
+            rq = store.get([pk]);
         } else {
             const indexStore = store.index(index.name);
             if (!indexStore) {
@@ -126,7 +122,7 @@ export class LocalDBRecords {
         return promise;
     }
 
-    async load(indexName: string, fields: IndexFieldsValues, accessToken?: string): Promise<RecordStoreStructure> {
+    async load(indexName: string, fields: IndexFieldsValues): Promise<RecordStoreStructure> {
         const {table} = this.#db;
         const {indices} = table;
         if (!indices.has(indexName)) {
@@ -139,13 +135,13 @@ export class LocalDBRecords {
         if (index.primary) {
             const pkField = this.#db.table.indices.primary.fields[0];
             const pk = fields.hasOwnProperty(pkField) ? fields[pkField] : undefined;
-            const key = this.#memory.generateKey(pk, accessToken);
+            const key = this.#memory.generateKey(pk);
             if (pk && this.#memory.has(key)) return Promise.resolve(this.#memory.get(key));
         }
 
         if (!this.#db.table.cache.enabled) return;
 
         await this.#db.prepare();
-        return await this.#load(index, fields, accessToken);
+        return await this.#load(index, fields);
     }
 }

@@ -16,8 +16,8 @@ export class TableRead {
     #list: ListReader;
     #counter: CounterReader;
 
-    constructor(table: Table, crud: Crud) {
-        const batch = new ReadBatch(crud);
+    constructor(table: Table, read: TReadFunction) {
+        const batch = new ReadBatch(read);
         this.#record = new RecordReader(table, batch);
     }
 
