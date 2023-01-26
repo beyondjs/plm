@@ -1,4 +1,4 @@
-import {Element, ElementSpecs} from "../element"
+import {Element} from "../element"
 import {ICollectionNodeSpecs, CollectionNode} from "../../tree/collection";
 import type {ListData} from "../../tables/data/lists/list";
 import {CollectionCounters} from "./counters/counters";
@@ -8,7 +8,7 @@ import type {FilterSpecs} from "../../tables/data/filter/filter";
 import {Tree} from "./tree";
 
 export /*bundle*/
-interface CollectionSpecs extends ElementSpecs {
+interface CollectionSpecs {
     node?: CollectionNode
     tree?: ICollectionNodeSpecs
     filter?: FilterSpecs
@@ -116,8 +116,7 @@ class Collection extends Element<CollectionNode> {
         super.node = specs.node ? specs.node : new CollectionNode(table, specs.tree);
 
         // Gets the list data access
-        const attributes = {};
-        this.#list = this.table.lists.get(specs.filter, this.node.order, attributes, specs.session);
+        this.#list = this.table.lists.get(specs.filter, this.node.order);
         super.data = this.#list;
 
         this.#items.activate();

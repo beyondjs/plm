@@ -1,7 +1,6 @@
 import type {Table} from '../../table';
 import type {ReadBatch} from './batch';
 import type {RecordData} from '../../data/records/data/record';
-import type {RecordStoreStructure} from '../../local-database/records/records';
 import {RecordQuery, TRecordResponse} from './query';
 
 export class RecordReader {
@@ -50,7 +49,7 @@ export class RecordReader {
         if (response === undefined || response === null) {
             if (cached) {
                 // Delete from cache
-                this.#table.localDB.records.remove(cached.data).catch(error => {
+                this.#table.localDB.records.remove(cached.fields).catch(error => {
                     const message = `Error removing record of table "${this.#table.name}" to local storage.\n\n`
                     console.error(message, error, '\n', cached)
                 });

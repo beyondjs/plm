@@ -42,7 +42,7 @@ export class RecordDeleter {
         this.#deleting = true;
         this.#record.trigger('change');
 
-        const response = await table.queries.delete(pkField.value);
+        const response = await table.crud.delete(pkField.value);
         if (!response) {
             this.#deleting = false;
             return false;

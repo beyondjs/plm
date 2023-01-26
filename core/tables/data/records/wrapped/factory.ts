@@ -15,11 +15,11 @@ export class WrappedFactory extends Factory<WrappedRecord> {
         this.#recordsDataFactory = recordsDataFactory;
     }
 
-    protected create(key: string, instanceId: number, identifier: RecordIdentifier, session: string) {
-        return new WrappedRecord(this, key, instanceId, identifier, session);
+    protected create(key: string, instanceId: number, identifier: RecordIdentifier) {
+        return new WrappedRecord(this, key, instanceId, identifier);
     }
 
-    get(identifier: RecordIdentifier, session: string): WrappedRecord {
-        return super.get(identifier, session);
+    get(identifier: RecordIdentifier): WrappedRecord {
+        return super.get(identifier);
     }
 }

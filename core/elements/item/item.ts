@@ -1,4 +1,4 @@
-import {Element, ElementSpecs} from "../element"
+import {Element} from "../element"
 import {ItemNodeSpecs, ItemNode} from "../../tree/item";
 import {RecordIdentifier} from "../../tables/data/records/data/record";
 import {Properties} from "./properties/properties";
@@ -7,7 +7,7 @@ import {ItemFields} from "./fields/fields";
 import {Tree} from "./tree";
 
 export /*bundle*/
-interface ItemSpecs extends ElementSpecs {
+interface ItemSpecs {
     // When the element is the root of a tree being created by the consumer
     tree?: ItemNodeSpecs
     // Passed internally by PLM, when the element is a node of a tree
@@ -159,7 +159,7 @@ class Item extends Element<ItemNode> {
             identifier[pk] = specs.pk;
         }
 
-        this.#record = this.table.records.get(identifier, specs.session);
+        this.#record = this.table.records.get(identifier);
         super.data = this.#record;
 
         this.#fields = new ItemFields(this);

@@ -26,8 +26,11 @@ export class CounterFetch {
         this.#fetching = true;
         this.#counter.trigger('change');
 
-        const read = await table.crud.read.count(this.#counter);
-        this.#value.value = read.count;
+        try {
+            this.#value.value = await table.crud.read.count(this.#counter);
+        } catch (error) {
+            this.#counter.error = error.message;
+        }
 
         this.#fetching = false;
         this.#fetched = true;

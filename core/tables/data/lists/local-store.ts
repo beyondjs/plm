@@ -13,13 +13,9 @@ export class ListLocalStore {
 
     async load(): Promise<IdsList> {
         const {table, filter} = this.#list;
-
-        const attributes = {};
-        const stored = await table.localDB.lists.load(filter.specs, attributes);
-
+        const stored = await table.localDB.lists.load(filter.specs);
         this.#accessed = true;
         this.#loaded = !!stored;
-
         return stored?.data;
     }
 

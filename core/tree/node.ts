@@ -1,5 +1,4 @@
 import {Events} from "@beyond-js/kernel/core";
-import {NodeSpecs} from "./specs";
 import {Table} from "../tables/table";
 import {tables} from "../tables/tables";
 import {Property} from "../tables/properties/property";
@@ -13,11 +12,6 @@ export class Node extends Events {
     readonly #table: Table
     get table() {
         return this.#table
-    }
-
-    readonly #session: string | undefined
-    get session() {
-        return this.#session
     }
 
     readonly #root: Node;
@@ -45,12 +39,11 @@ export class Node extends Events {
     /**
      * The Node Constructor
      * @param {string} table The table name
-     * @param {NodeSpecs} specs The node specification
      * @param {Node} parent The parent node in the tree
      * @param {Property} property The table property.
      * Undefined when the node is created from the item or the collection instead of being created by the tree
      */
-    constructor(table: string, specs?: NodeSpecs, parent?: Node, property?: Property) {
+    constructor(table: string, parent?: Node, property?: Property) {
         super();
 
         if (property && typeof property !== 'object') throw new Error('Invalid "property" parameter');
@@ -60,9 +53,6 @@ export class Node extends Events {
         if (!tables.has(table)) throw new Error(`Table "${table}" is not registered`);
         this.#table = tables.get(table);
 
-        specs = specs ? specs : {};
-
-        this.#session = specs.session ? specs.session : (parent ? parent.session : undefined);
         this.#parent = parent;
         this.#root = parent ? parent.root : this;
     }

@@ -29,10 +29,6 @@ export class Fields extends Map<string, Field> {
         }
     }
 
-    values() {
-        return [...this].map(([key, field]) => [key, field.value]);
-    }
-
     /**
      * If any of the fields have a published value assigned, it means that the
      * record is already back-end persisted

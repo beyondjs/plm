@@ -34,9 +34,9 @@ export class RecordLoader {
 
         const value = await table.localDB.records.load(index.name, fields);
         this.#searched = true;
-        if (!value || !value.version || !value.data) return false;
+        if (!value || !value.version || !value.fields) return false;
 
-        this.#record.fields.setter.values(value.data);
+        this.#record.fields.setter.values(value.fields);
         this.#version.value = value.version;
 
         this.#loaded = true;

@@ -1,6 +1,7 @@
+import type {RecordStoreStructure} from "../../../local-database/records/records";
+import type {TRecordResponse} from "../../../crud/read/query";
 import {SingleCall} from "@beyond-js/kernel/core";
 import {RecordData, RecordDataVersion} from "./record";
-import type {RecordStoreStructure} from "../../../local-database/records/records";
 
 export class RecordFetcher {
     readonly #record: RecordData
@@ -28,10 +29,12 @@ export class RecordFetcher {
 
         const {table} = this.#record;
 
-        const done = (data: RecordStoreStructure) => {
+        const done = ({data, error}: { data?: RecordStoreStructure | TRecordResponse, error?: string }) => {
             this.#fetched = true;
-            this.#record.fields.setter.values(data.data);
-            this.#version.value = data.version;
+            this.#record.error = error;
+            data && this.#record.fields.setter.values(data.fields);
+            this.#version.value = data?.version;
+
             this.#record.trigger('change');
             this.#record.trigger('updated');
             return true;
@@ -40,21 +43,25 @@ export class RecordFetcher {
         // Check if data is already loaded in memory cache
         const memory: RecordStoreStructure = table.localDB.records.memory.load(this.#record);
         if (memory && Date.now() - memory.savedTime < 1000) {
-            return done(memory);
+            return done({data: memory});
         }
 
         // Fetch from server
         this.#fetching = true;
         this.#record.trigger('change');
 
-        const response: RecordStoreStructure = await table.crud.read.record(this.#record);
-        if (!response) {
-            this.#fetching = false;
-            this.#fetched = true;
-            return false;
-        }
+        try {
+            const response: TRecordResponse = await table.crud.read.record(this.#record);
+            if (!response) {
+                this.#fetching = false;
+                this.#fetched = true;
+                return false;
+            }
 
-        this.#fetching = false;
-        return done(response);
+            this.#fetching = false;
+            return done({data: response});
+        } catch (exc) {
+            return done({error: exc.message});
+        }
     }
 }

@@ -26,7 +26,7 @@ export class ItemSelectorNode extends Node {
     }
 
     constructor(table: string, specs?: ItemSelectorNodeSpecs, parent?: Node, property?: ItemSelectorProperty) {
-        super(table, specs, parent, property);
+        super(table, parent, property);
 
         this.#property = property;
         if (typeof specs !== 'object') throw new Error('Invalid parameters');

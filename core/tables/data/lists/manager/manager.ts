@@ -1,4 +1,4 @@
-import {ListAttributes, ListData} from "../list";
+import {ListData} from "../list";
 import {FilterSpecs} from "../../filter/filter";
 import {Factory} from "../../factory/factory";
 import {OrderSpecs} from "../order";
@@ -16,13 +16,12 @@ export class ListsManager extends Factory<ListData> {
         return this.#realtime;
     }
 
-    protected create(key: string, instanceId: number, filter: FilterSpecs,
-                     order: OrderSpecs, attributes: ListAttributes, session: string): ListData {
-        return new ListData(this, key, instanceId, filter, order, attributes, session);
+    protected create(key: string, instanceId: number, filter: FilterSpecs, order: OrderSpecs): ListData {
+        return new ListData(this, key, instanceId, filter, order);
     }
 
-    get(filter: FilterSpecs, order: OrderSpecs, attributes: ListAttributes, session: string): ListData {
-        const list = super.get(filter, order, attributes, session);
+    get(filter: FilterSpecs, order: OrderSpecs): ListData {
+        const list = super.get(filter, order);
         this.#registries.informListCreated(list);
         return list;
     }

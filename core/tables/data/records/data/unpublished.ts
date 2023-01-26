@@ -10,8 +10,8 @@ export class UnpublishedRecords {
 
     readonly #records: Map<string, RecordData> = new Map()
 
-    create(session: string): RecordData {
-        const record = new RecordData(this.#recordsDataFactory, undefined, session);
+    create(): RecordData {
+        const record = new RecordData(this.#recordsDataFactory);
         this.#records.set(record.localId, record);
         return record;
     }

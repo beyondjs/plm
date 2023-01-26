@@ -12,10 +12,7 @@ export class CounterLocalStore {
 
     async load(): Promise<number> {
         const {table, filter} = this.#counter;
-
-        const attributes = {};
-        const stored = await table.localDB.counters.load(filter.specs, attributes);
-
+        const stored = await table.localDB.counters.load(filter.specs);
         this.#accessed = true;
         this.#loaded = !!stored;
 

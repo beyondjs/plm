@@ -15,8 +15,7 @@ export class Reports {
         const identifier: RecordIdentifier = {};
         identifier[pkName] = pk;
 
-        const session: string = undefined;
-        const record = this.#manager.recordsDataFactory.get(identifier, session);
+        const record = this.#manager.recordsDataFactory.get(identifier);
 
         if (record.landed) {
             if (!field) {
@@ -33,6 +32,6 @@ export class Reports {
             record.trigger('change');
         }
 
-        this.#manager.recordsDataFactory.release(identifier, session);
+        this.#manager.recordsDataFactory.release(identifier);
     }
 }

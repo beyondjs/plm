@@ -3,24 +3,25 @@ import {PendingPromise} from "@beyond-js/kernel/core";
 import {MemoryLocalDBRecords} from "./memory";
 import type {Index} from "../../indices";
 
-export type RecordFieldsValues = Record<string, any>
-export type IndexFieldsValues = Record<string, any>
+export type RecordFieldsValues = Record<string, any>;
+export type IndexFieldsValues = Record<string, any>;
 
 export type RecordStoreStructure = {
-    data: RecordFieldsValues
-    version: number
-    savedTime: number
+    fields: RecordFieldsValues;
+    version: number;
+    savedTime: number;
 }
 
 export class LocalDBRecords {
-    readonly #db: LocalDB
-    #memory = new MemoryLocalDBRecords()
+    readonly #db: LocalDB;
+
+    #memory = new MemoryLocalDBRecords();
     get memory() {
-        return this.#memory
+        return this.#memory;
     }
 
     constructor(db: LocalDB) {
-        this.#db = db
+        this.#db = db;
     }
 
     #save = (value: RecordStoreStructure): Promise<boolean> => {
@@ -45,21 +46,17 @@ export class LocalDBRecords {
         return promise;
     }
 
-    async save(data: RecordFieldsValues, version: number): Promise<boolean> {
+    async save(fields: RecordFieldsValues, version: number): Promise<boolean> {
         const pk = this.#db.table.indices.primary.fields[0];
-        if (!data.hasOwnProperty(pk)) {
+        if (!fields.hasOwnProperty(pk)) {
             throw new Error(`Cannot save record to the local database as its pk "${pk}" is not assigned`);
         }
 
-        const value: RecordStoreStructure = {
-            data: data,
-            version: version,
-            savedTime: Date.now()
-        };
+        const value: RecordStoreStructure = {fields, version, savedTime: Date.now()};
 
         // Save in memory cache first, the data must be available immediately as other
         // nodes in the tree that request the data could require it
-        this.#memory.save(data[pk], value);
+        this.#memory.save(fields[pk], value);
 
         if (!this.#db.table.cache.enabled) return;
         await this.#db.prepare();
@@ -71,15 +68,15 @@ export class LocalDBRecords {
         return true;
     }
 
-    async remove(data: RecordFieldsValues): Promise<boolean> {
+    async remove(fields: RecordFieldsValues): Promise<boolean> {
         const pk = this.#db.table.indices.primary.fields[0];
-        if (!data.hasOwnProperty(pk)) {
+        if (!fields.hasOwnProperty(pk)) {
             throw new Error(`Cannot remove record to the local database as its pk "${pk}"`);
         }
 
         // Remove in memory cache first, the data must be available immediately as other
         // nodes in the tree that request the data could require it
-        this.#memory.remove(data[pk]);
+        this.#memory.remove(fields[pk]);
 
         if (!this.#db.table.cache.enabled) return;
         await this.#db.prepare();

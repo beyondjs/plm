@@ -40,6 +40,19 @@ export class RecordData extends Events {
         return this.#localId;
     }
 
+    #error: string;
+    get error() {
+        return this.#error;
+    }
+
+    set error(value: string) {
+        this.#error = value;
+    }
+
+    get valid() {
+        return !this.#error;
+    }
+
     #version: RecordDataVersion = {};
     get version() {
         return this.#version.value;
@@ -64,20 +77,20 @@ export class RecordData extends Events {
     readonly #fetcher = new RecordFetcher(this, this.#version);
 
     get fetching() {
-        return this.#fetcher.fetching
+        return this.#fetcher.fetching;
     }
 
     get fetched() {
-        return this.#fetcher.fetched
+        return this.#fetcher.fetched;
     }
 
     get landed() {
-        return this.loaded || this.fetched
+        return this.loaded || this.fetched;
     }
 
     #found = false
     get found() {
-        return this.#found
+        return this.#found;
     }
 
     async fetch() {
@@ -160,16 +173,15 @@ export class RecordData extends Events {
      * @param {RecordsDataFactory} manager
      * @param {string | RecordIdentifier} identifier Can be the localId (string)
      * or the initial identifier (RecordIdentifier)
-     * @param {string} session
      */
-    constructor(manager: RecordsDataFactory, identifier: string | RecordIdentifier, session?: string) {
+    constructor(manager: RecordsDataFactory, identifier?: string | RecordIdentifier) {
         super();
         this.#manager = manager;
 
         // If the initial identifier is not set, then it is a locally created record
         if (typeof identifier === 'string') this.#localId = createUUID();
 
-        const initialIdentifier = typeof identifier === 'object' ? <RecordIdentifier>identifier : undefined;
+        const initialIdentifier = typeof identifier === 'object' ? <RecordIdentifier>identifier : void 0;
         this.#identifiers = new RecordIdentifiers(this, initialIdentifier);
 
         this.#fields = new Fields(this);

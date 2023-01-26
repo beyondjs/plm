@@ -19,6 +19,19 @@ export class CounterData extends Product {
         return this.#value.value;
     }
 
+    #error: string;
+    get error() {
+        return this.#error;
+    }
+
+    set error(value: string) {
+        this.#error = value;
+    }
+
+    get valid() {
+        return !this.#error;
+    }
+
     // The local store, properties and methods
     #localStore = new CounterLocalStore(this)
     get localStore() {
@@ -63,8 +76,8 @@ export class CounterData extends Product {
         await this.#fetch.fetch();
     }
 
-    constructor(manager: CountersManager, key: string, instanceId: number, filterSpecs: FilterSpecs, session: string) {
-        super(manager, key, instanceId, session);
+    constructor(manager: CountersManager, key: string, instanceId: number, filterSpecs: FilterSpecs) {
+        super(manager, key, instanceId);
         this.#filter = new Filter(this.table, filterSpecs);
     }
 }

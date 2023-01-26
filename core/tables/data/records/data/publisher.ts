@@ -25,11 +25,10 @@ export class RecordPublisher {
 
     /**
      * Publishes the current state of the record to the server
-     * @param {string} session
      * @returns {Promise<boolean>}
      */
     @SingleCall
-    async publish(session?: string): Promise<boolean> {
+    async publish(): Promise<boolean> {
         // Do not allow to publish if the record is already being published
         if (this.#publishing) {
             console.warn('Cannot publish a record that is already being published');
@@ -51,7 +50,7 @@ export class RecordPublisher {
 
         // Send the fields to the server
         try {
-            await this.#record.table.queries.publish(fields, session);
+            await this.#record.table.crud.publish(this.#record);
         } catch (e) {
             console.warn('Error publishing record: ', e);
             this.#publishing = false;

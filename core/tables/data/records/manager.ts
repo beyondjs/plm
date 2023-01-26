@@ -38,12 +38,12 @@ export class RecordsManager extends Events {
         this.#recordsDataFactory.wrappedFactory = this.#wrappedFactory;
     }
 
-    get(identifier: RecordIdentifier, session: string): WrappedRecord {
-        return this.#wrappedFactory.get(identifier, session);
+    get(identifier: RecordIdentifier): WrappedRecord {
+        return this.#wrappedFactory.get(identifier);
     }
 
-    create(session: string): RecordData {
-        return this.#recordsDataFactory.create(session);
+    create(): RecordData {
+        return this.#recordsDataFactory.create();
     }
 
     getUnpublished(localId: string): RecordData {

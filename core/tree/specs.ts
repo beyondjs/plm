@@ -5,7 +5,3 @@ import {ItemSelectorNodeSpecs} from "./item-selector";
 
 export type NodesSpecs =
     Record<string, boolean | ItemNodeSpecs | ICollectionNodeSpecs | ItemsNodeSpecs | ItemSelectorNodeSpecs>
-
-export interface NodeSpecs {
-    session?: string
-}

@@ -5,10 +5,6 @@ import {ListenerFunction} from "@beyond-js/kernel/core";
 import {Product} from "../tables/data/factory/product";
 import {Realtime} from "./realtime";
 
-export interface ElementSpecs {
-    session?: string
-}
-
 export interface Element<NODE extends Node> {
     is: string
 
@@ -67,10 +63,6 @@ export abstract class Element<NODE extends Node> {
         this.#data.on('change', this.#triggerChange);
 
         this.#realtime = new Realtime(this);
-    }
-
-    get session(): string {
-        return this.#node.session;
     }
 
     readonly #table: Table;

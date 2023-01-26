@@ -17,11 +17,6 @@ export class WrappedRecord extends Product {
         return this.#identifier;
     }
 
-    readonly #session: string;
-    get session(): string {
-        return this.#session;
-    }
-
     #destroyed = false;
     get destroyed() {
         return this.#destroyed;
@@ -96,18 +91,15 @@ export class WrappedRecord extends Product {
         this.trigger('change');
     }
 
-    constructor(manager: WrappedFactory,
-                key: string, instanceId: number,
-                identifier: RecordIdentifier, session: string) {
-        super(manager, key, instanceId, session);
+    constructor(manager: WrappedFactory, key: string, instanceId: number, identifier: RecordIdentifier) {
+        super(manager, key, instanceId);
 
         this.#identifier = identifier;
-        this.#session = session;
 
         const {recordsDataFactory} = manager;
         recordsDataFactory.on(`identifier.${key}.record.changed`, this.#update);
 
-        const record = recordsDataFactory.get(identifier, session);
+        const record = recordsDataFactory.get(identifier);
         this.#update(record);
 
         this.#fields = new WrappedRecordFields(this);
@@ -131,6 +123,6 @@ export class WrappedRecord extends Product {
         recordsDataFactory.off('change', this.#update);
         super.destroy();
 
-        this.#record.manager.release(this.#identifier, this.#session);
+        this.#record.manager.release(this.#identifier);
     }
 }

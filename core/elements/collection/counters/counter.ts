@@ -19,8 +19,7 @@ export class CollectionCounter {
         conditions = conditions ? conditions.concat(collection.list.filter.specs) : collection.list.filter.specs;
 
         const filter = new Filter(table, conditions);
-
-        this.#counter = table.counters.get(filter.specs, collection.list.attributes, collection.session);
+        this.#counter = table.counters.get(filter.specs);
     }
 
     load = async () => await this.#counter.load();

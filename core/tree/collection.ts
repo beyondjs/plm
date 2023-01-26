@@ -1,11 +1,10 @@
-import type {NodeSpecs} from "./specs";
 import {Node} from "./node"
 import {ItemNode} from "./item";
 import {NodesSpecs} from "./specs";
 import {Property} from "../tables/properties/property";
 import {OrderSpecs} from "../tables/data/lists/order";
 
-export interface ICollectionNodeSpecs extends NodeSpecs {
+export interface ICollectionNodeSpecs {
     view?: string
     limit?: number
     properties?: NodesSpecs
@@ -44,7 +43,7 @@ export class CollectionNode extends Node {
     }
 
     constructor(table: string, specs: ICollectionNodeSpecs, parent?: Node, property?: Property) {
-        super(table, specs, parent, property);
+        super(table, parent, property);
 
         specs = specs ? specs : {};
         if (typeof specs !== 'object') throw new Error('Invalid parameters');
