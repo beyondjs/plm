@@ -1,17 +1,21 @@
 import type {TReadFunction} from "./index";
 import type {TQuery, TQueryResponse} from "./query";
+import type {Table} from "../../table";
+
+export /*bundle*/ type TBatchQueries = {
+    table: string,
+    queries: TQuery[];
+}
 
 export class ReadBatch {
+    readonly #table: Table;
     readonly #read: TReadFunction;
     readonly #specs: { max: number };
     readonly #queue: TQuery[] = [];
     readonly #queries: Map<number, TQuery> = new Map();
 
-    get queueLength(): number {
-        return this.#queue.length;
-    }
-
-    constructor(read: TReadFunction, specs?: { max?: number }) {
+    constructor(table: Table, read: TReadFunction, specs?: { max?: number }) {
+        this.#table = table;
         this.#read = read;
 
         this.#specs = ((specs) => {
@@ -53,7 +57,7 @@ export class ReadBatch {
             }
         }
 
-        const result = this.#read(queries);
+        const result = this.#read({table: this.#table.name, queries});
         if (!(result instanceof Promise)) return done({error: `Queries response is not a promise`});
 
         result.then((outputs: TQueryResponse[]) => {

@@ -2,13 +2,14 @@ import type {Table} from '../../table';
 import type {RecordData} from '../../data/records/data/record';
 import type {ListData} from '../../data/lists/list';
 import type {CounterData} from '../../data/counter/counter';
-import type {TQuery, TRecordResponse, TQueryResponse, PK} from './query';
+import type {TRecordResponse, TQueryResponse, PK} from './query';
+import type {TBatchQueries} from './batch';
 import {RecordReader} from './record';
 import {ListReader} from './list';
 import {CounterReader} from './counter';
 import {ReadBatch} from './batch';
 
-export type TReadFunction = (batch: TQuery[]) => Promise<TQueryResponse[]>;
+export type TReadFunction = (batch: TBatchQueries) => Promise<TQueryResponse[]>;
 
 export class TableRead {
     #record: RecordReader;
@@ -16,7 +17,7 @@ export class TableRead {
     #counter: CounterReader;
 
     constructor(table: Table, read: TReadFunction) {
-        const batch = new ReadBatch(read);
+        const batch = new ReadBatch(table, read);
 
         this.#record = new RecordReader(table, batch);
         this.#list = new ListReader(table, batch);

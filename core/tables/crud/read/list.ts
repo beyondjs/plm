@@ -78,7 +78,7 @@ export class ListReader {
         const request = await this.#request(list.filter.specs);
         const response = <TListResponse>await this.#batch.exec(request);
 
-        if (!(response instanceof Array)) {
+        if (!(response.records instanceof Array)) {
             console.error(`Invalid response received on query "list" to table "${this.#table.name}".\n\n`,
                 request, '\n', response);
             return [];
@@ -86,8 +86,11 @@ export class ListReader {
 
         // Save to the local database the list and the records data
         const listIds: (string | number)[] = [];
-        for (const record of response) {
-            if (!record.uptodate) {
+        for (const record of response.records) {
+            if (!record.pk) {
+                /**
+                 * Record is not in cache
+                 */
                 const pk = this.#table.indices.primary.fields[0];
                 if (!record.data.hasOwnProperty(pk)) {
                     console.error(`Error on "list" query. Record of table "${this.#table.name}" ` +
@@ -97,21 +100,31 @@ export class ListReader {
 
                 // Verify that the version of the received record is newer
                 const {cached} = request;
-                const version = cached && cached.hasOwnProperty(record.data[pk]) ? cached[record.data[pk]] : 0;
+                const cachedVersion = cached && cached.hasOwnProperty(record.data[pk]) ? cached[record.data[pk]] : 0;
 
-                if (version && version >= record.version) {
+                if (cachedVersion && cachedVersion >= record.version) {
                     console.warn('The record version of the received fetch is not improved.\n' +
-                        `Cached version was "${version}" and the record received version is "${record.version}"`);
+                        `Cached version was "${cachedVersion}" and the record received version is "${record.version}"`);
                 }
 
                 listIds.push(record.data[pk]);
-            } else {
-                listIds.push(record.pk);
-            }
 
-            this.#table.localDB.records.save(record.data, record.version)
-                .catch(error => console.error(`Error saving record of table "${this.#table.name}" to local storage.\n\n`,
-                    error, '\n', request, '\n', record));
+                this.#table.localDB.records.save(record.data, record.version)
+                    .catch(error =>
+                        console.error(`Error saving record of table "${this.#table.name}" to local storage.\n\n`,
+                            error, '\n', request, '\n', record));
+            } else {
+                /**
+                 * Record is up-to-date
+                 */
+                const {cached} = request;
+                if (!cached.hasOwnProperty(record.pk)) {
+                    const message = `The record received ("${record.pk}") is supposed to be cached, but it is not`;
+                    console.warn(message, cached);
+                } else {
+                    listIds.push(record.pk);
+                }
+            }
         }
 
         this.#table.localDB.lists.save(list.filter.specs, listIds)

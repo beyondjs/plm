@@ -65,7 +65,15 @@ export class Query<TQueryResponse> {
 
 type TFields = Record<string, any>;
 
-export class RecordQuery extends Query<TRecordResponse> {
+export /*bundle*/
+interface IRecordQuery {
+    id: number;
+    requiring: string;
+    fields: Record<string, any>;
+    version: number;
+}
+
+export class RecordQuery extends Query<TRecordResponse> implements IRecordQuery {
     get requiring() {
         return 'record';
     }
@@ -96,12 +104,22 @@ export class RecordQuery extends Query<TRecordResponse> {
     }
 
     toJSON() {
-        const {id, fields, version} = this;
-        return {id, fields, version};
+        const {requiring, id, fields, version} = this;
+        return {requiring, id, fields, version};
     }
 }
 
-export class ListQuery extends Query<TListResponse> {
+
+export /*bundle*/
+interface IListQuery {
+    id: number;
+    requiring: string;
+    filter: FilterSpecs;
+    index?: string;
+    cached?: TCachedList;
+}
+
+export class ListQuery extends Query<TListResponse> implements IListQuery {
     get requiring() {
         return 'list';
     }
@@ -138,12 +156,21 @@ export class ListQuery extends Query<TListResponse> {
     }
 
     toJSON() {
-        const {id, filter, index, cached} = this;
-        return {id, filter, index, cached};
+        const {requiring, id, filter, index, cached} = this;
+        return {requiring, id, filter, index, cached};
     }
 }
 
-export class CounterQuery extends Query<TCounterResponse> {
+
+export /*bundle*/
+interface ICounterQuery {
+    id: number;
+    requiring: string;
+    filter: FilterSpecs;
+    index?: string;
+}
+
+export class CounterQuery extends Query<TCounterResponse> implements ICounterQuery {
     get requiring() {
         return 'count';
     }
@@ -174,8 +201,8 @@ export class CounterQuery extends Query<TCounterResponse> {
     }
 
     toJSON() {
-        const {id, filter, index} = this;
-        return {id, filter, index};
+        const {requiring, id, filter, index} = this;
+        return {requiring, id, filter, index};
     }
 }
 
