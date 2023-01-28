@@ -10,15 +10,15 @@ import {ItemNode} from '../../tree/item';
 export /*bundle*/
 interface ItemSpecs {
     // When the element is the root of a tree being created by the consumer
-    tree?: ItemNodeSpecs
+    tree?: ItemNodeSpecs;
     // Passed internally by PLM, when the element is a node of a tree
-    node?: ItemNode
+    node?: ItemNode;
     // The record identifier
-    identifier?: RecordIdentifier
+    identifier?: RecordIdentifier;
     // The primary key field value (only when record is persisted)
-    pk?: (string | number)
+    pk?: (string | number);
     // The local id when the record is in the unpublished records store
-    localId?: string
+    localId?: string;
 }
 
 export interface DerivedItem {
@@ -28,12 +28,12 @@ export interface DerivedItem {
 export /*bundle*/
 class Item extends Element<ItemNode> {
     get is() {
-        return 'item'
+        return 'item';
     }
 
     readonly #record: WrappedRecord
     get record() {
-        return this.#record
+        return this.#record;
     }
 
     get error(): string {
@@ -48,12 +48,12 @@ class Item extends Element<ItemNode> {
         return this.#record.version;
     }
 
-    readonly #fields: ItemFields
+    readonly #fields: ItemFields;
     get fields() {
         return this.#fields;
     }
 
-    readonly #properties: Properties
+    readonly #properties: Properties;
     get properties() {
         return this.#properties;
     }
@@ -83,7 +83,7 @@ class Item extends Element<ItemNode> {
     }
 
     get found(): boolean {
-        return this.#record.found
+        return this.#record.found;
     }
 
     readonly #tree: Tree = new Tree(this);

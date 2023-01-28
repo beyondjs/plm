@@ -6,32 +6,32 @@ import {CompareObjects} from "../../factory/compare-objects";
 import {NotSet} from "../../../../constants";
 
 export class RecordIdentifiers extends Events {
-    readonly #record: RecordData
+    readonly #record: RecordData;
 
     // The initial identifier when the record was created by the manager
     // and the record is still not loaded
-    readonly #initial?: RecordIdentifier
+    readonly #initial?: RecordIdentifier;
     get initial(): RecordIdentifier {
-        return this.#initial
+        return this.#initial;
     }
 
-    #indices: Indices
+    #indices: Indices;
 
     // Identifiers by index name
-    #identifiers: Map<string, RecordIdentifier> = new Map
+    #identifiers: Map<string, RecordIdentifier> = new Map;
 
     get size() {
-        return this.#identifiers.size
+        return this.#identifiers.size;
     }
 
-    #errors: string[] = []
+    #errors: string[] = [];
 
     errors() {
-        return this.#errors
+        return this.#errors;
     }
 
     get(indexName: string): RecordIdentifier {
-        return this.#identifiers.get(indexName)
+        return this.#identifiers.get(indexName);
     }
 
     /**

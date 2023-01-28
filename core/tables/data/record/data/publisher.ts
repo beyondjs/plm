@@ -28,41 +28,24 @@ export class RecordPublisher {
      * @returns {Promise<boolean>}
      */
     @SingleCall
-    async publish(): Promise<boolean> {
-        // Do not allow to publish if the record is already being published
-        if (this.#publishing) {
-            console.warn('Cannot publish a record that is already being published');
-            return false;
-        }
-
-        // Prepare the data to be sent to the server
-        const fields: Map<string, any> = this.#record.fields.unpublished();
-
+    async publish(): Promise<void> {
         // Do not allow to publish if the record has not been modified
-        if (!fields.size) {
-            console.warn('Cannot publish a record that has not been modified');
-            return false;
+        if (!this.#record.unpublished) {
+            throw new Error('Cannot publish a record that has not been modified');
         }
 
-        // Set the publishing flag
         this.#publishing = true;
         this.#record.trigger('change');
 
-        // Send the fields to the server
         try {
             await this.#record.table.crud.publish(this.#record);
+            this.#published = true;
+            this.#record.trigger('published');
         } catch (e) {
-            console.warn('Error publishing record: ', e);
+            throw e;
+        } finally {
             this.#publishing = false;
             this.#record.trigger('change');
-            return false;
         }
-
-        // If the server returns a success response
-        this.#publishing = false;
-        this.#record.trigger('change');
-        this.#record.trigger('published');
-
-        return true;
     }
 }

@@ -1,4 +1,4 @@
-import type {LocalDB} from '..';
+import type {LocalDB} from '../';
 import type {FilterSpecs} from '../../data/filter';
 import {MemoryLocalDBLists} from './memory';
 import {PendingPromise} from '@beyond-js/kernel/core';

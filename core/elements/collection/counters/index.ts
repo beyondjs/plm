@@ -1,4 +1,4 @@
-import type {Collection} from '..';
+import type {Collection} from '../';
 import type {FilterSpecs} from '../../../tables/data/filter';
 import {CollectionCounter} from './counter';
 

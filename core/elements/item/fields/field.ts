@@ -1,4 +1,4 @@
-import type {Item} from '..';
+import type {Item} from '../';
 import {NotSet} from '../../../constants';
 
 export class ItemField {

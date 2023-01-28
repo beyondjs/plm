@@ -1,4 +1,4 @@
-import type {LocalDB} from '..';
+import type {LocalDB} from '../';
 import type {Index} from '../../indices';
 import {PendingPromise} from '@beyond-js/kernel/core';
 import {MemoryLocalDBRecords} from './memory';

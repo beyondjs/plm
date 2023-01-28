@@ -1,5 +1,5 @@
 import type {Property} from '../property';
-import type {Item} from '../..';
+import type {Item} from '../../';
 import type {ItemsNode} from '../../../../tree/items';
 import type {ItemsProperty as TableItemsProperty} from '../../../../tables/properties/types/items';
 import type {WrappedRecordField} from '../../../../tables/data/record/wrapped/fields/field';

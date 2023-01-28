@@ -1,4 +1,4 @@
-import type {RecordData} from '..';
+import type {RecordData} from '../';
 import {Field} from './field';
 import {FieldsSetter} from './setter';
 

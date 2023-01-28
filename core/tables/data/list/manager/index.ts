@@ -1,6 +1,6 @@
 import type {FilterSpecs} from '../../filter';
 import type {OrderSpecs} from '../order';
-import {ListData} from '..';
+import {ListData} from '../';
 import {Factory} from '../../factory';
 import {Registries} from './registries';
 import {Realtime} from './realtime';

@@ -1,4 +1,4 @@
-import {tables} from '../../..';
+import {tables} from '../../../';
 
 export class RecordReport {
     #checkTable = (tableName: string): boolean => {

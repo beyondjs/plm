@@ -1,5 +1,5 @@
 import type {RecordFieldsValues} from '../../../../local-database/records';
-import type {RecordData} from '..';
+import type {RecordData} from '../';
 
 export class FieldsSetter {
     readonly #record: RecordData;

@@ -4,10 +4,9 @@ import type {RecordData} from '../data/record/data';
 import {TableRead} from './read';
 
 export type CrudFunctions = {
-    create?: (record: RecordData) => Promise<{ error: string }>;
+    publish?: (table: string, fields: [string, any][]) => Promise<void>;
+    delete?: (table: string, pk: string | number) => Promise<void>;
     read: TReadFunction;
-    update?: (record: RecordData) => Promise<{ error: string }>;
-    delete?: (record: RecordData) => Promise<{ error: string }>;
 }
 
 /**
@@ -16,10 +15,9 @@ export type CrudFunctions = {
  * that match a specific filter.
  */
 export class Crud {
+    #table: Table;
+
     readonly #functions: CrudFunctions;
-    get functions() {
-        return this.#functions;
-    }
 
     readonly #read: TableRead;
     get read() {
@@ -27,23 +25,24 @@ export class Crud {
     }
 
     constructor(table: Table, functions: CrudFunctions) {
+        this.#table = table;
         this.#functions = functions;
         this.#read = new TableRead(table, functions.read);
     }
 
-    async publish(record: RecordData): Promise<{ error?: string }> {
-        try {
-            return await this.#functions.create(record);
-        } catch (error) {
-            return {error: error.message};
+    async publish(record: RecordData): Promise<void> {
+        if (typeof this.#functions.publish !== 'function') {
+            throw new Error(`Table "${this.#table.name}" does not support to create new records`);
         }
+
+        await this.#functions.publish(this.#table.name, [...record.fields.unpublished()]);
     }
 
-    async delete(record: RecordData): Promise<{ error?: string }> {
-        try {
-            return await this.#functions.delete(record);
-        } catch (error) {
-            return {error: error.message};
+    async delete(record: RecordData): Promise<void> {
+        if (typeof this.#functions.delete !== 'function') {
+            throw new Error(`Table "${this.#table.name}" does not support record deletion`);
         }
+
+        await this.#functions.delete(this.#table.name, record.pk.value);
     }
 }

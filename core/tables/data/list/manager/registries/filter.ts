@@ -1,6 +1,6 @@
 // Keeps a registry (grouping by filter) of the lists that were created
 import type {ListsRegistry} from '.';
-import type {ListData} from '../..';
+import type {ListData} from '../../';
 import {CompareObjects} from '../../../factory/compare-objects';
 import {Filter} from '../../../filter';
 

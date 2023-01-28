@@ -1,4 +1,4 @@
-import type {ListsManager} from '..';
+import type {ListsManager} from '../';
 import {Reports} from './reports';
 
 export class Realtime {

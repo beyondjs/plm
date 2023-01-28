@@ -1,4 +1,4 @@
-import type {RecordData} from '..';
+import type {RecordData} from '../';
 import {PublishedFieldSource} from './sources/published';
 import {MemoryFieldSource} from './sources/memory';
 import {NotSet} from '../../../../../constants';
@@ -77,7 +77,7 @@ export class Field {
     }
 
     get unpublished() {
-        return this.#memory !== NotSet && this.#memory !== this.#published;
+        return this.#memory.value !== this.#published.value;
     }
 
     discard = () => this.#memory.discard();

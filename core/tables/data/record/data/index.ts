@@ -9,10 +9,10 @@ import {RecordPublisher} from './publisher';
 import {RecordDeleter} from './deleter';
 import {createUUID} from '../../uuid';
 
-export type RecordIdentifier = Record<string, string | number | boolean>
+export type RecordIdentifier = Record<string, string | number | boolean>;
 
 export interface RecordDataVersion {
-    value?: number
+    value?: number;
 }
 
 export class RecordData extends Events {
@@ -28,6 +28,10 @@ export class RecordData extends Events {
     readonly #fields: Fields;
     get fields() {
         return this.#fields;
+    }
+
+    get unpublished(): boolean {
+        return !!this.#fields.unpublished().size;
     }
 
     readonly #identifiers: RecordIdentifiers;

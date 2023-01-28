@@ -1,4 +1,4 @@
-import type {Item} from '../..';
+import type {Item} from '../../';
 import type {ItemNode} from '../../../../tree/item';
 import type {RecordIdentifier} from '../../../../tables/data/record/data';
 import type {ItemProperty as TableItemProperty} from '../../../../tables/properties/types/item';

@@ -1,7 +1,7 @@
 /**
  * The collection property filter generator
  */
-import type {Item} from '../..';
+import type {Item} from '../../';
 import type {Condition, FilterSpecs} from '../../../../tables/data/filter';
 import type {
     CollectionProperty as TableCollectionProperty,

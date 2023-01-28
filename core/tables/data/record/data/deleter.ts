@@ -19,39 +19,34 @@ export class RecordDeleter {
     }
 
     @SingleCall
-    async delete(): Promise<boolean> {
+    async delete(): Promise<void> {
         // Avoid to request the delete action twice to the server
         if (this.#deleting) return;
 
         // Check if the record is persisted
         if (!this.#record.persisted) {
-            console.warn('Record is not persisted, delete request skipped', this.#record);
-            return false;
+            throw new Error('Record cannot be deleted as is it not persisted');
         }
 
         // Check if the record is already deleted
-        if (this.#deleted) return true;
+        if (this.#deleted) return;
 
-        const {table} = this.#record;
-        const index = table.indices.primary;
-        const pk = index.fields[0];
-        const pkField = this.#record.fields.get(pk);
-
-        if (!pkField.assigned) throw new Error(`Primary key field "${pk}" not assigned`);
+        if (!this.#record.pk.assigned) {
+            throw new Error(`Record cannot be deleted as its primary key field is not defined`);
+        }
 
         this.#deleting = true;
         this.#record.trigger('change');
 
-        const response = await table.crud.delete(pkField.value);
-        if (!response) {
+        try {
+            await this.#record.table.crud.delete(this.#record.pk.value);
+            this.#deleted = true;
+            this.#record.trigger('deleted');
+        } catch (e) {
+            throw e;
+        } finally {
             this.#deleting = false;
-            return false;
+            this.#record.trigger('change');
         }
-
-        this.#deleting = false;
-        this.#deleted = true;
-        this.#record.trigger('change');
-        this.#record.trigger('deleted');
-        return true;
     }
 }

@@ -1,4 +1,4 @@
-import type {ListsManager} from '..';
+import type {ListsManager} from '../';
 import type {ListUpdateFilterReport} from '../../../realtime/reports/list';
 import type {FilterSpecs} from '../../../filter';
 import {ConditionOperand} from '../../../filter';

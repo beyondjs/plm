@@ -1,4 +1,4 @@
-import type {Item} from '../..';
+import type {Item} from '../../';
 import type {Collection} from '../../../collection';
 import type {FilterSpecs} from '../../../../tables/data/filter';
 import type {CollectionProperty as TableCollectionProperty} from '../../../../tables/properties/types/collection';

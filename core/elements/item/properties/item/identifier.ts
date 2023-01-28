@@ -2,7 +2,7 @@
  * The item property identifier generator
  */
 import type {ItemNode} from '../../../../tree/item';
-import type {Item} from '../..';
+import type {Item} from '../../';
 import type {RecordIdentifier} from '../../../../tables/data/record/data';
 import type {IdentifierSpec, ItemProperty as TableItemProperty} from '../../../../tables/properties/types/item';
 

@@ -52,7 +52,7 @@ export class FieldSource {
     }
 
     get assigned() {
-        return ![NotSet, undefined].includes(this.value)
+        return ![NotSet, undefined].includes(this.value);
     }
 
     constructor(field: Field, specs?: FieldSourceSpecs) {

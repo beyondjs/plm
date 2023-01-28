@@ -1,4 +1,4 @@
-import type {Tables} from '../..';
+import type {Tables} from '../../';
 import type {Table} from '../../table';
 import type {DerivedItem} from '../../../elements/item';
 import type {PropertySpecs} from '../property';

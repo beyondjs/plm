@@ -1,5 +1,5 @@
-import type {ListsManager} from '..';
-import type {ListData} from '../..';
+import type {ListsManager} from '../';
+import type {ListData} from '../../';
 import {RegistryByFilter} from './filter';
 
 export interface ListsRegistry {

@@ -1,4 +1,4 @@
-import type {Collection} from '..';
+import type {Collection} from '../';
 import type {DerivedItem, Item} from '../../item';
 
 export class CollectionItems {

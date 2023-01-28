@@ -1,6 +1,6 @@
 import type {Property} from '../property';
 import type {ItemSelectorProperty as TableItemSelectorProperty} from '../../../../tables/properties/types/item-selector';
-import type {Item} from '../..';
+import type {Item} from '../../';
 import type {RecordIdentifier} from '../../../../tables/data/record/data';
 import type {ItemPropertyIdentifier} from '../item/identifier';
 import type {ItemSelectorNode} from '../../../../tree/item-selector';

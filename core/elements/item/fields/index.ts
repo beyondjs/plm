@@ -1,4 +1,4 @@
-import type {Item} from '..';
+import type {Item} from '../';
 import {ItemField} from './field';
 
 export class ItemFields extends Map<string, ItemField> {
