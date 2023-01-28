@@ -1,4 +1,4 @@
-import {tables} from "../../../tables";
+import {tables} from '../../..';
 
 export /*bundle*/
 type ListUpdateFilterReport = Record<string, string | number | boolean>;

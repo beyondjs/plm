@@ -1,13 +1,14 @@
 /**
  * The collection property filter generator
  */
-import {Condition, ConditionOperand, FilterSpecs} from "../../../../tables/data/filter/filter";
-import {
+import type {Item} from '../..';
+import type {Condition, FilterSpecs} from '../../../../tables/data/filter';
+import type {
     CollectionProperty as TableCollectionProperty,
     FilterSpec as PropertyFilterSpec
-} from "../../../../tables/properties/types/collection";
-import {CollectionNode} from "../../../../tree/collection";
-import {Item} from "../../item";
+} from '../../../../tables/properties/types/collection';
+import type {CollectionNode} from '../../../../tree/collection';
+import {ConditionOperand} from '../../../../tables/data/filter';
 
 export class CollectionPropertyFilter {
     readonly #node: CollectionNode

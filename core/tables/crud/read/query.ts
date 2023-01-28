@@ -1,4 +1,4 @@
-import type {FilterSpecs} from "../../data/filter/filter";
+import type {FilterSpecs} from '../../data/filter';
 import {PendingPromise} from '@beyond-js/kernel/core';
 
 let incremental = 0;

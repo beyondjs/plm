@@ -1,5 +1,5 @@
-import {Item} from "../item";
-import {NotSet} from "../../../constants";
+import type {Item} from '..';
+import {NotSet} from '../../../constants';
 
 export class ItemField {
     #item: Item

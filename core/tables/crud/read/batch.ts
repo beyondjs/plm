@@ -1,6 +1,6 @@
-import type {TReadFunction} from "./index";
-import type {TQuery, TQueryResponse} from "./query";
-import type {Table} from "../../table";
+import type {TReadFunction} from './index';
+import type {TQuery, TQueryResponse} from './query';
+import type {Table} from '../../table';
 
 export /*bundle*/ type TBatchQueries = {
     table: string,

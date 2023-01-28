@@ -1,7 +1,7 @@
-import {Node} from "./node"
-import {NodesSpecs} from "./specs";
-import {ItemNode} from "./item";
-import {ItemsProperty} from "../tables/properties/types/items";
+import type {NodesSpecs} from './specs';
+import type {ItemsProperty} from '../tables/properties/types/items';
+import {Node} from './node'
+import {ItemNode} from './item';
 
 export interface ItemsNodeSpecs {
     properties: NodesSpecs

@@ -1,10 +1,10 @@
 /**
  * The item property identifier generator
  */
-import type {ItemNode} from "../../../../tree/item";
-import type {Item} from "../../item";
-import {IdentifierSpec, ItemProperty as TableItemProperty} from "../../../../tables/properties/types/item";
-import {RecordIdentifier} from "../../../../tables/data/records/data/record";
+import type {ItemNode} from '../../../../tree/item';
+import type {Item} from '../..';
+import type {RecordIdentifier} from '../../../../tables/data/record/data';
+import type {IdentifierSpec, ItemProperty as TableItemProperty} from '../../../../tables/properties/types/item';
 
 export class ItemPropertyIdentifier {
     readonly #node: ItemNode

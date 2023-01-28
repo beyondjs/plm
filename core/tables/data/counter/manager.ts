@@ -1,6 +1,6 @@
-import {CounterData} from "./counter";
-import {Factory} from "../factory/factory";
-import type {FilterSpecs} from "../filter/filter";
+import type {FilterSpecs} from '../filter';
+import {CounterData} from './';
+import {Factory} from '../factory';
 
 export class CountersManager extends Factory<CounterData> {
     protected create(key: string, instanceId: number, filter: FilterSpecs): CounterData {

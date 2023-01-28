@@ -1,6 +1,7 @@
-import {DerivedItem, Item} from "../../../elements/item/item";
-import {PropertySpecs, Property} from "../property";
-import type {Table} from "../../table";
+import type {Table} from '../../table';
+import type {DerivedItem, Item} from '../../../elements/item';
+import type {PropertySpecs} from '../property';
+import {Property} from '../property';
 
 interface FieldIdentifierSpec {
     field: string

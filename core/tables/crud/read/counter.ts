@@ -1,7 +1,7 @@
 import type {Table} from '../../table';
 import type {ReadBatch} from './batch';
 import type {TCounterResponse} from './query';
-import type {CounterData} from '../../data/counter/counter';
+import type {CounterData} from '../../data/counter';
 import {CounterQuery} from './query';
 
 export class CounterReader {

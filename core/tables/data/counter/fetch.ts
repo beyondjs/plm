@@ -1,4 +1,4 @@
-import type {CounterData, Value} from "./counter";
+import type {CounterData, Value} from '.';
 
 export class CounterFetch {
     readonly #counter: CounterData

@@ -1,5 +1,5 @@
-import {Events} from "@beyond-js/kernel/core"
-import {Factory} from "./factory";
+import type {Factory} from '.';
+import {Events} from '@beyond-js/kernel/core'
 
 export abstract class Product extends Events {
     readonly #manager?: Factory<any>

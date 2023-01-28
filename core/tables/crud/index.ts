@@ -1,7 +1,7 @@
 import type {Table} from '../table';
-import type {TReadFunction} from "./read";
-import type {RecordData} from "../data/records/data/record";
-import {TableRead} from "./read";
+import type {TReadFunction} from './read';
+import type {RecordData} from '../data/record/data';
+import {TableRead} from './read';
 
 export type CrudFunctions = {
     create?: (record: RecordData) => Promise<{ error: string }>;

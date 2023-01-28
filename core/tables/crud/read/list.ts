@@ -1,8 +1,8 @@
 import type {Table} from '../../table';
 import type {ReadBatch} from './batch';
-import type {ListData} from '../../data/lists/list';
+import type {ListData} from '../../data/list';
 import type {PK, TCachedList, TListResponse} from './query';
-import type {FilterSpecs} from '../../data/filter/filter';
+import type {FilterSpecs} from '../../data/filter';
 import {ListQuery} from './query';
 
 export class ListReader {

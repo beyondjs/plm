@@ -1,7 +1,8 @@
-import {DerivedCollection} from "../../../elements/collection/collection";
-import {PropertySpecs, Property} from "../property";
-import {Item} from "../../../elements/item/item";
-import type {Table} from "../../table";
+import type {DerivedCollection} from '../../../elements/collection';
+import type {PropertySpecs} from '../property';
+import type {Item} from '../../../elements/item';
+import type {Table} from '../../table';
+import {Property} from '../property';
 
 // The source property or the value property must be set (one of both)
 export interface FieldFilterSpec {

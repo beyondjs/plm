@@ -1,11 +1,13 @@
-import type {CrudFunctions} from "./crud";
-import {Properties, PropertySpecsUnion} from "./properties/properties";
-import {Indices, IndicesSpecs} from "./indices/indices";
-import {LocalDB} from "./local-database/local-database";
-import {ListsManager} from "./data/lists/manager/manager";
-import {RecordsManager} from "./data/records/manager";
-import {CountersManager} from "./data/counter/manager";
-import {Crud} from "./crud";
+import type {CrudFunctions} from './crud';
+import type {PropertySpecsUnion} from './properties';
+import type {IndicesSpecs} from './indices/indices';
+import {ListsManager} from './data/list/manager';
+import {RecordsManager} from './data/record/manager';
+import {CountersManager} from './data/counter/manager';
+import {Properties} from './properties';
+import {LocalDB} from './local-database';
+import {Indices} from './indices/indices';
+import {Crud} from './crud';
 
 interface CacheSpecs {
     enabled: boolean

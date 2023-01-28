@@ -1,17 +1,17 @@
-import {Events} from "@beyond-js/kernel/core";
-import {Table} from "../tables/table";
-import {tables} from "../tables/tables";
-import {Property} from "../tables/properties/property";
+import type {Table} from '../tables/table';
+import type {Property} from '../tables/properties/property';
+import {Events} from '@beyond-js/kernel/core';
+import {tables} from '../tables';
 
 export class Node extends Events {
-    readonly #property: Property
+    readonly #property: Property;
     get property() {
-        return this.#property
+        return this.#property;
     }
 
-    readonly #table: Table
+    readonly #table: Table;
     get table() {
-        return this.#table
+        return this.#table;
     }
 
     readonly #root: Node;
@@ -19,7 +19,7 @@ export class Node extends Events {
         return this.#root;
     }
 
-    readonly #parent: Node
+    readonly #parent: Node;
     get parent() {
         return this.#parent;
     }

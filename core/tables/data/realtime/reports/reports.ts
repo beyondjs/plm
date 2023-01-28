@@ -1,5 +1,5 @@
-import {RecordReport} from "./record";
-import {ListReport} from "./list";
+import {RecordReport} from './record';
+import {ListReport} from './list';
 
 export class Reports {
     #list = new ListReport();

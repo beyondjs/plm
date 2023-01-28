@@ -1,4 +1,4 @@
-import type {Item} from "./item";
+import type {Item} from '.';
 
 export class Tree {
     readonly #item: Item;

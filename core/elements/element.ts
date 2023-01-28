@@ -1,9 +1,9 @@
-import type {Table} from "../tables/table";
-import {tables} from "../tables/tables";
-import {Node} from "../tree/node";
-import {ListenerFunction} from "@beyond-js/kernel/core";
-import {Product} from "../tables/data/factory/product";
-import {Realtime} from "./realtime";
+import type {Table} from '../tables/table';
+import type {Node} from '../tree/node';
+import type {ListenerFunction} from '@beyond-js/kernel/core';
+import type {Product} from '../tables/data/factory/product';
+import {tables} from '../tables';
+import {Realtime} from './realtime';
 
 export interface Element<NODE extends Node> {
     is: string

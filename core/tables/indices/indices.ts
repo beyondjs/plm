@@ -1,5 +1,6 @@
-import {Index, IndexSpecs} from "./index";
-import type {Table} from "../table";
+import type {Table} from '../table';
+import type {IndexSpecs} from './index';
+import {Index} from './index';
 
 export type IndicesSpecs = Record<string, IndexSpecs>
 

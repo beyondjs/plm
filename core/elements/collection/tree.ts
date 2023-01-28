@@ -1,4 +1,4 @@
-import type {Collection} from "./collection";
+import type {Collection} from '.';
 
 export class Tree {
     readonly #collection: Collection;

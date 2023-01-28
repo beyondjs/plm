@@ -1,4 +1,4 @@
-import type {ListStoreStructure} from "./lists";
+import type {ListStoreStructure} from '.';
 
 export class MemoryLocalDBLists extends Map<string, ListStoreStructure> {
 }

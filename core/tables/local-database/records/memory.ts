@@ -1,7 +1,7 @@
-import {RecordStoreStructure} from "./records";
-import type {RecordData} from "../../data/records/data/record";
-import type {Field} from "../../data/records/data/fields/field";
-import {CompareObjects} from "../../data/factory/compare-objects";
+import type {RecordData} from '../../data/record/data';
+import type {Field} from '../../data/record/data/fields/field';
+import type {RecordStoreStructure} from './';
+import {CompareObjects} from '../../data/factory/compare-objects';
 
 export class MemoryLocalDBRecords extends Map<string, RecordStoreStructure> {
     generateKey = (pk: string | number): string => {

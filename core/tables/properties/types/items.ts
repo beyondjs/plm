@@ -1,7 +1,8 @@
-import {DerivedItem} from "../../../elements/item/item";
-import {PropertySpecs, Property} from "../property";
-import type {Table} from "../../table";
-import type {Tables} from "../../tables";
+import type {Tables} from '../..';
+import type {Table} from '../../table';
+import type {DerivedItem} from '../../../elements/item';
+import type {PropertySpecs} from '../property';
+import {Property} from '../property';
 
 declare function require(module: string): any;
 

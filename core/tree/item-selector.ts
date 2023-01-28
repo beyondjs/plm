@@ -1,8 +1,8 @@
-import {Node} from "./node";
-import {ItemSelectorProperty} from "../tables/properties/types/item-selector";
-import {Property} from "../tables/properties/property";
-import type {NodesSpecs} from "./specs";
-import type {ItemNode} from "./item";
+import type {ItemSelectorProperty} from '../tables/properties/types/item-selector';
+import type {NodesSpecs} from './specs';
+import type {ItemNode} from './item';
+import {Node} from './node';
+import {Property} from '../tables/properties/property';
 
 declare function require(module: string): any;
 

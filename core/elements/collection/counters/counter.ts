@@ -1,6 +1,7 @@
-import type {Collection} from "../collection";
-import type {CounterData} from "../../../tables/data/counter/counter";
-import {Filter, FilterSpecs} from "../../../tables/data/filter/filter";
+import type {Collection} from '..';
+import type {CounterData} from '../../../tables/data/counter';
+import type {FilterSpecs} from '../../../tables/data/filter';
+import {Filter} from '../../../tables/data/filter';
 
 export class CollectionCounter {
     readonly #collection: Collection

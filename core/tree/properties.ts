@@ -1,18 +1,18 @@
 /**
  * Nodes of the tree that represent the properties of the item and item-selector
  */
-import type {NodesSpecs} from "./specs";
-import type {Table} from "../tables/table";
-import type {Property} from "../tables/properties/property";
-import type {Node} from "./node"
-import type {ItemNode, ItemNodeSpecs} from "./item";
-import type {CollectionNode} from "./collection";
-import type {ItemsNode, ItemsNodeSpecs} from "./items";
-import type {ItemProperty} from "../tables/properties/types/item";
-import type {CollectionProperty} from "../tables/properties/types/collection";
-import type {ItemSelectorProperty} from "../tables/properties/types/item-selector";
-import type {ItemsProperty} from "../tables/properties/types/items";
-import type {ItemSelectorNode, ItemSelectorNodeSpecs} from "./item-selector";
+import type {NodesSpecs} from './specs';
+import type {Table} from '../tables/table';
+import type {Property} from '../tables/properties/property';
+import type {Node} from './node'
+import type {ItemNode, ItemNodeSpecs} from './item';
+import type {CollectionNode} from './collection';
+import type {ItemsNode, ItemsNodeSpecs} from './items';
+import type {ItemProperty} from '../tables/properties/types/item';
+import type {CollectionProperty} from '../tables/properties/types/collection';
+import type {ItemSelectorProperty} from '../tables/properties/types/item-selector';
+import type {ItemsProperty} from '../tables/properties/types/items';
+import type {ItemSelectorNode, ItemSelectorNodeSpecs} from './item-selector';
 
 declare function require(module: string): any;
 

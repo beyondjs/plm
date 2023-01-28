@@ -1,4 +1,4 @@
-import {ItemProperty} from "./property";
+import type {ItemProperty} from '.';
 
 export class Tree {
     readonly #property: ItemProperty;

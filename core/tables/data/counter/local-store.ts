@@ -1,4 +1,4 @@
-import {CounterData} from "./counter";
+import type {CounterData} from '.';
 
 export class CounterLocalStore {
     readonly #counter: CounterData

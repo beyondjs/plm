@@ -1,4 +1,4 @@
-import type {Table} from "../table";
+import type {Table} from '../table';
 
 export interface PropertySpecs {
     readonly?: boolean

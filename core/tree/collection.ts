@@ -1,8 +1,8 @@
-import {Node} from "./node"
-import {ItemNode} from "./item";
-import {NodesSpecs} from "./specs";
-import {Property} from "../tables/properties/property";
-import {OrderSpecs} from "../tables/data/lists/order";
+import type {NodesSpecs} from './specs';
+import type {OrderSpecs} from '../tables/data/list/order';
+import type {Property} from '../tables/properties/property';
+import {Node} from './node'
+import {ItemNode} from './item';
 
 export interface ICollectionNodeSpecs {
     view?: string

@@ -1,7 +1,8 @@
-import {PropertySpecs, Property} from "../property";
-import type {DerivedItem, Item} from "../../../elements/item/item";
-import {RecordIdentifier} from "../../data/records/data/record";
-import type {Table} from "../../table";
+import type {Table} from '../../table';
+import type {DerivedItem, Item} from '../../../elements/item';
+import type {PropertySpecs} from '../property';
+import type {RecordIdentifier} from '../../data/record/data';
+import {Property} from '../property';
 
 export interface ItemSelectorResponse {
     table: string

@@ -1,6 +1,6 @@
 import type {Table} from '../../table';
 import type {ReadBatch} from './batch';
-import type {RecordData} from '../../data/records/data/record';
+import type {RecordData} from '../../data/record/data';
 import {RecordQuery, TRecordResponse} from './query';
 
 export class RecordReader {

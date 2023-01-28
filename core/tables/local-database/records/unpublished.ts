@@ -1,5 +1,5 @@
-import type {LocalDB} from "../local-database";
-import {PendingPromise} from "@beyond-js/kernel/core";
+import type {LocalDB} from '..';
+import {PendingPromise} from '@beyond-js/kernel/core';
 
 type RecordsValues = Record<string, any>
 

@@ -1,7 +1,7 @@
 import type {Table} from '../../table';
-import type {RecordData} from '../../data/records/data/record';
-import type {ListData} from '../../data/lists/list';
-import type {CounterData} from '../../data/counter/counter';
+import type {RecordData} from '../../data/record/data';
+import type {ListData} from '../../data/list';
+import type {CounterData} from '../../data/counter';
 import type {TRecordResponse, TQueryResponse, PK} from './query';
 import type {TBatchQueries} from './batch';
 import {RecordReader} from './record';

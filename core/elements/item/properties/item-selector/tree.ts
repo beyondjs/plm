@@ -1,4 +1,4 @@
-import {ItemSelectorProperty} from "./property";
+import type {ItemSelectorProperty} from '.';
 
 export class Tree {
     readonly #property: ItemSelectorProperty;
