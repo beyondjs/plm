@@ -23,15 +23,14 @@ export class RecordLoader {
     @SingleCall
     async load(): Promise<boolean> {
         const {table} = this.#record;
-        const index = table.indices.primary;
-        const pk = index.fields[0];
-        const pkField = this.#record.fields.get(pk);
+        const {pk} = this.#record;
 
-        if (!pkField.assigned) throw new Error(`Primary key field "${pk}" not assigned`);
+        if (!pk.assigned) throw new Error(`Primary key field "${pk.name}" not assigned`);
 
         const fields: Record<string, any> = {};
-        fields[pk] = pkField.value;
+        fields[pk.name] = pk.value;
 
+        const index = table.indices.primary;
         const value = await table.localDB.records.load(index.name, fields);
         this.#searched = true;
         if (!value || !value.version || !value.fields) return false;

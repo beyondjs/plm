@@ -126,3 +126,5 @@ export class Table {
         return true;
     }
 }
+
+export /*bundle*/ type TTable = Table;
