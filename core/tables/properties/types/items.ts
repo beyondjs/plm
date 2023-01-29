@@ -10,14 +10,14 @@ declare function require(module: string): any;
 // @field  Compounds indices are not actually supported
 // @source The name of the field that is the source of data of the ids of the related table
 export interface ItemsPropertyIdentifierSpecs {
-    field: string,
-    source: string
+    field: string;
+    source: string;
 }
 
 export interface ItemsPropertySpecs {
-    Items: DerivedItem
-    identifier: ItemsPropertyIdentifierSpecs
-    table: string
+    Items: DerivedItem;
+    identifier: ItemsPropertyIdentifierSpecs;
+    table: string;
 }
 
 export class ItemsProperty extends Property {
@@ -25,19 +25,19 @@ export class ItemsProperty extends Property {
         return 'items';
     }
 
-    readonly #table: string
+    readonly #table: string;
     get table(): string {
-        return this.#table
+        return this.#table;
     }
 
-    readonly #Items: DerivedItem
+    readonly #Items: DerivedItem;
     get Items(): DerivedItem {
-        return this.#Items
+        return this.#Items;
     }
 
-    readonly #identifier: ItemsPropertyIdentifierSpecs
+    readonly #identifier: ItemsPropertyIdentifierSpecs;
     get identifier() {
-        return this.#identifier
+        return this.#identifier;
     }
 
     constructor(parentTable: Table, name: string, specs: PropertySpecs & ItemsPropertySpecs) {

@@ -1,12 +1,12 @@
 import type {Table} from '../table';
 
 export interface PropertySpecs {
-    readonly?: boolean
-    immutable?: boolean
+    readonly?: boolean;
+    immutable?: boolean;
 }
 
 export interface Property {
-    type: string
+    type: string;
 }
 
 /**
